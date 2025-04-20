@@ -56,6 +56,8 @@ dependencies {
 
     //noinspection UseTomlInstead
     implementation 'com.google.android.gms:play-services-ads:24.2.0'
+    //noinspection UseTomlInstead
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
 
 //    implementation libs.play.services.ads
 

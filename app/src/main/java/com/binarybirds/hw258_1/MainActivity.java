@@ -2,6 +2,7 @@ package com.binarybirds.hw258_1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -328,6 +329,21 @@ public class MainActivity extends AppCompatActivity {
             // Show original price with strikethrough
             discountAmount.setText("%" + price);
             discountAmount.setPaintFlags(discountAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+
+
+            // Set click listener for the item
+
+            myView.setOnClickListener(v -> {
+                HashMap<String, String> selectedProduct = filteredList.get(i);
+                Intent intent = new Intent(MainActivity.this, ProductsDetails.class);
+                intent.putExtra("product", selectedProduct);
+                startActivity(intent);
+
+                Toast.makeText(MainActivity.this, "Clicked on: "+ selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
+
+            });
+
 
             return myView;
         }
