@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,19 +7,16 @@
     android:background="@color/background"
     tools:context=".MainActivity">
 
-
+    <!-- Inner container with padding -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:paddingStart="@dimen/_15sdp"
-        android:paddingTop="@dimen/_10sdp"
-        android:paddingEnd="@dimen/_15sdp"
+        android:id="@+id/contentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -31,38 +27,37 @@
             app:goIcon="@drawable/shaon"
             app:hideNavigationIcon="true"
             app:iconifiedByDefault="false"
+            android:layout_marginStart="@dimen/_5sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cartView"
             app:layout_constraintTop_toTopOf="parent"
-            app:queryHint="Search here"
-            android:layout_marginEnd="@dimen/_8sdp"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintEnd_toStartOf="@id/cartView"
+            android:layout_marginEnd="@dimen/_5sdp"
+            app:queryHint="Search here" />
 
         <ImageView
             android:id="@+id/cartView"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_36sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
             android:scaleType="fitXY"
             android:src="@drawable/cart_without_product"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/primary_text" />
-
 
         <GridView
             android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:elevation="@dimen/_5sdp"
             android:gravity="center"
             android:numColumns="2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchView"
-            tools:ignore="MissingConstraints" />
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

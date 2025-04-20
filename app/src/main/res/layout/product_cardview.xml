@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    >
 
-    
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +26,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/card_background">
+            android:background="@color/card_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="@dimen/_10sdp">
 
 
             <com.makeramen.roundedimageview.RoundedImageView
@@ -60,10 +66,11 @@
                     android:layout_height="wrap_content"
                     android:maxLines="2"
                     android:minEms="1"
-                    android:minLines="1"
+                    android:minLines="2"
                     android:text="Item Name"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
+                    android:paddingBottom="@dimen/_3sdp"
                     tools:ignore="HardcodedText,MissingConstraints" />
 
                 <TextView
@@ -85,7 +92,7 @@
                     android:layout_marginStart="@dimen/_3sdp"
                     android:text="before Dis"
                     android:textSize="@dimen/_13ssp"
-                    android:textStyle="normal"
+                    android:textStyle="normal|italic"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/itemName"
                     tools:ignore="HardcodedText" />
@@ -93,15 +100,25 @@
 
                 <TextView
                     android:id="@+id/category"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:text="Category"
-                    android:textSize="@dimen/_15ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/priceAfterDis"
+                    tools:ignore="HardcodedText"
+                    android:paddingBottom="@dimen/_5sdp"/>
+
+                <TextView
+                    android:id="@+id/idNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID No: "
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="normal|italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/discountAmount"
                     tools:ignore="HardcodedText"
                     android:paddingBottom="@dimen/_5sdp"/>
 
