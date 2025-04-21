@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ((MyAdapter)gridView.getAdapter()).getFilter().filter(newText);
+                ((MyAdapter) gridView.getAdapter()).getFilter().filter(newText);
                 return true;
             }
         });
@@ -87,152 +87,158 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void parseData() {
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, PRODUCT_URL, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("products");
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, PRODUCT_URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    int total = response.getInt("total");
+                    int skip = response.getInt("skip");
+                    int limit = response.getInt("limit");
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    //Toast.makeText(MainActivity.this, "Total: " + total + " | Skip: " + skip + " | Limit: " + limit, Toast.LENGTH_SHORT).show();
 
-                                // Main Product Data
-                                String id = jsonObject.optString("id");
-                                String title = jsonObject.optString("title");
-                                String description = jsonObject.optString("description");
-                                String category = jsonObject.optString("category");
-                                double price = jsonObject.optDouble("price");
-                                double discountPercentage = jsonObject.optDouble("discountPercentage");
-                                double rating = jsonObject.optDouble("rating");
-                                int stock = jsonObject.optInt("stock");
-                                String brand = jsonObject.optString("brand", "N/A");
-                                String sku = jsonObject.optString("sku", "N/A");
-                                double weight = jsonObject.optDouble("weight");
-                                String warrantyInformation = jsonObject.optString("warrantyInformation", "N/A");
-                                String shippingInformation = jsonObject.optString("shippingInformation", "N/A");
-                                String availabilityStatus = jsonObject.optString("availabilityStatus", "N/A");
-                                String returnPolicy = jsonObject.optString("returnPolicy", "N/A");
-                                int minimumOrderQuantity = jsonObject.optInt("minimumOrderQuantity");
-                                String thumbnail = jsonObject.optString("thumbnail", "");
+                    JSONArray jsonArray = response.getJSONArray("products");
 
-                                // Dimensions Object
-                                JSONObject dimensions = jsonObject.optJSONObject("dimensions");
-                                double width = dimensions != null ? dimensions.optDouble("width") : 0;
-                                double height = dimensions != null ? dimensions.optDouble("height") : 0;
-                                double depth = dimensions != null ? dimensions.optDouble("depth") : 0;
 
-                                // Meta Object
-                                JSONObject meta = jsonObject.optJSONObject("meta");
-                                String createdAt = meta != null ? meta.optString("createdAt") : "";
-                                String updatedAt = meta != null ? meta.optString("updatedAt") : "";
-                                String barcode = meta != null ? meta.optString("barcode") : "";
-                                String qrCode = meta != null ? meta.optString("qrCode") : "";
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                // Tags Array
-                                JSONArray tagsArray = jsonObject.optJSONArray("tags");
-                                StringBuilder tags = new StringBuilder();
-                                if (tagsArray != null) {
-                                    for (int j = 0; j < tagsArray.length(); j++) {
-                                        tags.append(tagsArray.optString(j));
-                                        if (j != tagsArray.length() - 1) tags.append(", ");
-                                    }
-                                }
 
-                                // Images Array
-                                JSONArray imagesArray = jsonObject.optJSONArray("images");
-                                StringBuilder images = new StringBuilder();
-                                if (imagesArray != null) {
-                                    for (int j = 0; j < imagesArray.length(); j++) {
-                                        images.append(imagesArray.optString(j));
-                                        if (j != imagesArray.length() - 1) images.append(", ");
-                                    }
-                                }
+                        // Main Product Data
+                        String id = jsonObject.optString("id");
+                        String title = jsonObject.optString("title");
+                        String description = jsonObject.optString("description");
+                        String category = jsonObject.optString("category");
+                        double price = jsonObject.optDouble("price");
+                        double discountPercentage = jsonObject.optDouble("discountPercentage");
+                        double rating = jsonObject.optDouble("rating");
+                        int stock = jsonObject.optInt("stock");
+                        String brand = jsonObject.optString("brand", "N/A");
+                        String sku = jsonObject.optString("sku", "N/A");
+                        double weight = jsonObject.optDouble("weight");
+                        String warrantyInformation = jsonObject.optString("warrantyInformation", "N/A");
+                        String shippingInformation = jsonObject.optString("shippingInformation", "N/A");
+                        String availabilityStatus = jsonObject.optString("availabilityStatus", "N/A");
+                        String returnPolicy = jsonObject.optString("returnPolicy", "N/A");
+                        int minimumOrderQuantity = jsonObject.optInt("minimumOrderQuantity");
+                        String thumbnail = jsonObject.optString("thumbnail", "");
 
-                                // Reviews Array
-                                JSONArray reviewsArray = jsonObject.optJSONArray("reviews");
-                                StringBuilder reviews = new StringBuilder();
-                                if (reviewsArray != null) {
-                                    for (int j = 0; j < reviewsArray.length(); j++) {
-                                        JSONObject review = reviewsArray.optJSONObject(j);
-                                        if (review != null) {
-                                            reviews.append("[")
-                                                    .append(review.optString("reviewerName", "Anonymous"))
-                                                    .append(" | ")
-                                                    .append("Rating: ").append(review.optInt("rating"))
-                                                    .append(" | ")
-                                                    .append(review.optString("comment", "No comment"))
-                                                    .append("]\n");
-                                        }
-                                    }
-                                }
+                        // Dimensions Object
+                        JSONObject dimensions = jsonObject.optJSONObject("dimensions");
+                        double width = dimensions != null ? dimensions.optDouble("width") : 0;
+                        double height = dimensions != null ? dimensions.optDouble("height") : 0;
+                        double depth = dimensions != null ? dimensions.optDouble("depth") : 0;
 
-                                // Add to HashMap
-                                HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("id", id);
-                                hashMap.put("title", title);
-                                hashMap.put("description", description);
-                                hashMap.put("category", category);
-                                hashMap.put("price", String.valueOf(price));
-                                hashMap.put("discountPercentage", String.valueOf(discountPercentage));
-                                hashMap.put("rating", String.valueOf(rating));
-                                hashMap.put("stock", String.valueOf(stock));
-                                hashMap.put("brand", brand);
-                                hashMap.put("sku", sku);
-                                hashMap.put("weight", String.valueOf(weight));
-                                hashMap.put("warrantyInformation", warrantyInformation);
-                                hashMap.put("shippingInformation", shippingInformation);
-                                hashMap.put("availabilityStatus", availabilityStatus);
-                                hashMap.put("returnPolicy", returnPolicy);
-                                hashMap.put("minimumOrderQuantity", String.valueOf(minimumOrderQuantity));
-                                hashMap.put("thumbnail", thumbnail);
+                        // Meta Object
+                        JSONObject meta = jsonObject.optJSONObject("meta");
+                        String createdAt = meta != null ? meta.optString("createdAt") : "";
+                        String updatedAt = meta != null ? meta.optString("updatedAt") : "";
+                        String barcode = meta != null ? meta.optString("barcode") : "";
+                        String qrCode = meta != null ? meta.optString("qrCode") : "";
 
-                                // Dimensions
-                                hashMap.put("width", String.valueOf(width));
-                                hashMap.put("height", String.valueOf(height));
-                                hashMap.put("depth", String.valueOf(depth));
-
-                                // Meta
-                                hashMap.put("createdAt", createdAt);
-                                hashMap.put("updatedAt", updatedAt);
-                                hashMap.put("barcode", barcode);
-                                hashMap.put("qrCode", qrCode);
-
-                                // Arrays
-                                hashMap.put("tags", tags.toString());
-                                hashMap.put("images", images.toString());
-                                hashMap.put("reviews", reviews.toString());
-
-                                // Add to list
-                                arrayList.add(hashMap);
+                        // Tags Array
+                        JSONArray tagsArray = jsonObject.optJSONArray("tags");
+                        StringBuilder tags = new StringBuilder();
+                        if (tagsArray != null) {
+                            for (int j = 0; j < tagsArray.length(); j++) {
+                                tags.append(tagsArray.optString(j));
+                                if (j != tagsArray.length() - 1) tags.append(", ");
                             }
-
-                            // Set adapter
-                            MyAdapter myAdapter = new MyAdapter(arrayList);
-                            gridView.setAdapter(myAdapter);
-
-                            Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
                         }
+
+                        // Images Array
+                        JSONArray imagesArray = jsonObject.optJSONArray("images");
+                        StringBuilder images = new StringBuilder();
+                        if (imagesArray != null) {
+                            for (int j = 0; j < imagesArray.length(); j++) {
+                                images.append(imagesArray.optString(j));
+                                if (j != imagesArray.length() - 1) images.append(", ");
+                            }
+                        }
+
+                        // Reviews Array
+                        JSONArray reviewsArray = jsonObject.optJSONArray("reviews");
+                        StringBuilder reviews = new StringBuilder();
+                        if (reviewsArray != null) {
+                            for (int j = 0; j < reviewsArray.length(); j++) {
+                                JSONObject review = reviewsArray.optJSONObject(j);
+                                if (review != null) {
+                                    reviews.append("[").append(review.optString("reviewerName", "Anonymous")).append(" | ").append("Rating: ").append(review.optInt("rating")).append(" | ").append(review.optString("comment", "No comment")).append("]\n");
+                                }
+                            }
+                        }
+
+                        // Add to HashMap
+                        HashMap<String, String> hashMap = new HashMap<>();
+
+                        hashMap.put("total", String.valueOf(total));
+                        hashMap.put("skip", String.valueOf(skip));
+                        hashMap.put("limit", String.valueOf(limit));
+
+
+                        hashMap.put("id", id);
+                        hashMap.put("title", title);
+                        hashMap.put("description", description);
+                        hashMap.put("category", category);
+                        hashMap.put("price", String.valueOf(price));
+                        hashMap.put("discountPercentage", String.valueOf(discountPercentage));
+                        hashMap.put("rating", String.valueOf(rating));
+                        hashMap.put("stock", String.valueOf(stock));
+                        hashMap.put("brand", brand);
+                        hashMap.put("sku", sku);
+                        hashMap.put("weight", String.valueOf(weight));
+                        hashMap.put("warrantyInformation", warrantyInformation);
+                        hashMap.put("shippingInformation", shippingInformation);
+                        hashMap.put("availabilityStatus", availabilityStatus);
+                        hashMap.put("returnPolicy", returnPolicy);
+                        hashMap.put("minimumOrderQuantity", String.valueOf(minimumOrderQuantity));
+                        hashMap.put("thumbnail", thumbnail);
+
+                        // Dimensions
+                        hashMap.put("width", String.valueOf(width));
+                        hashMap.put("height", String.valueOf(height));
+                        hashMap.put("depth", String.valueOf(depth));
+
+                        // Meta
+                        hashMap.put("createdAt", createdAt);
+                        hashMap.put("updatedAt", updatedAt);
+                        hashMap.put("barcode", barcode);
+                        hashMap.put("qrCode", qrCode);
+
+                        // Arrays
+                        hashMap.put("tags", tags.toString());
+                        hashMap.put("images", images.toString());
+                        hashMap.put("reviews", reviews.toString());
+
+                        // Add to list
+                        arrayList.add(hashMap);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                    // Set adapter
+                    MyAdapter myAdapter = new MyAdapter(arrayList);
+                    gridView.setAdapter(myAdapter);
+
+                    Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(objectRequest);
     }
 
     public class MyAdapter extends BaseAdapter implements Filterable {
-        private ArrayList<HashMap<String, String>> originalList;
-        private ArrayList<HashMap<String, String>> filteredList;
+        private final ArrayList<HashMap<String, String>> originalList;
+        private final ArrayList<HashMap<String, String>> filteredList;
 
         public MyAdapter(ArrayList<HashMap<String, String>> arrayList) {
             this.originalList = new ArrayList<>(arrayList);
@@ -302,6 +308,9 @@ public class MainActivity extends AppCompatActivity {
             TextView idNo = myView.findViewById(R.id.idNo);
 
             HashMap<String, String> hashMap = filteredList.get(i);
+            String total = hashMap.get("total");
+            String skip = hashMap.get("skip");
+            String limit = hashMap.get("limit");
 
             String thumbnail = hashMap.get("thumbnail");
             String id = hashMap.get("id");
@@ -330,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
             discountAmount.setText("%" + price);
             discountAmount.setPaintFlags(discountAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
+            Toast.makeText(getApplicationContext(), "Total: " + total, Toast.LENGTH_SHORT).show();
 
 
             // Set click listener for the item
@@ -340,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("product", selectedProduct);
                 startActivity(intent);
 
-                Toast.makeText(getApplicationContext(), "Clicked on: "+ selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Clicked on: " + selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
 
             });
 
