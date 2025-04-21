@@ -336,11 +336,11 @@ public class MainActivity extends AppCompatActivity {
 
             myView.setOnClickListener(v -> {
                 HashMap<String, String> selectedProduct = filteredList.get(i);
-                Intent intent = new Intent(MainActivity.this, ProductsDetails.class);
+                Intent intent = new Intent(getApplicationContext(), ProductsDetails.class);
                 intent.putExtra("product", selectedProduct);
                 startActivity(intent);
 
-                Toast.makeText(MainActivity.this, "Clicked on: "+ selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Clicked on: "+ selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
 
             });
 
