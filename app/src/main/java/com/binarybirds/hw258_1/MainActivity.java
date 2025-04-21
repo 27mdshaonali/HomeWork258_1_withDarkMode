@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         parseData();
+        cartView.setOnClickListener(v -> cartView());
     }
 
     public void parseData() {
@@ -242,6 +243,13 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(objectRequest);
+    }
+
+    public void cartView() {
+
+        Intent intent = new Intent(getApplicationContext(), CartView.class);
+        startActivity(intent);
+
     }
 
     public class MyAdapter extends BaseAdapter implements Filterable {

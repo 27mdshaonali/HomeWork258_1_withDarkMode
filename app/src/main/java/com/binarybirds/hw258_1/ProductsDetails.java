@@ -1,6 +1,8 @@
 package com.binarybirds.hw258_1;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +38,9 @@ public class ProductsDetails extends AppCompatActivity {
         TextView productStock = findViewById(R.id.productStock);
         TextView productBrand = findViewById(R.id.productBrand);
         TextView productCategory = findViewById(R.id.productCategory);
+
+        Button addToCart = findViewById(R.id.addToCart);
+        Button viewCart = findViewById(R.id.viewCart);
 
         // Set up image slider
         List<SlideModel> slideModels = new ArrayList<>();
@@ -107,5 +112,20 @@ public class ProductsDetails extends AppCompatActivity {
         if (product.containsKey("category")) {
             productCategory.setText(String.format("Category: %s", product.get("category")));
         }
+
+        //============================================== ==========================================//
+
+        viewCart.setOnClickListener(v -> cartView());
+
+
+
     }
+
+    public void cartView() {
+
+        Intent intent = new Intent(getApplicationContext(), CartView.class);
+        startActivity(intent);
+
+    }
+
 }
