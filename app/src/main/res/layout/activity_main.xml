@@ -13,25 +13,25 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="@dimen/_5sdp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
             android:background="@drawable/search_bg"
             app:defaultQueryHint="Search here"
             app:goIcon="@drawable/shaon"
             app:hideNavigationIcon="true"
             app:iconifiedByDefault="false"
-            android:layout_marginStart="@dimen/_5sdp"
+            app:layout_constraintEnd_toStartOf="@id/cartView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cartView"
-            android:layout_marginEnd="@dimen/_5sdp"
             app:queryHint="Search here" />
 
         <ImageView
@@ -41,9 +41,28 @@
             android:layout_marginEnd="@dimen/_5sdp"
             android:scaleType="fitXY"
             android:src="@drawable/cart_without_product"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/primary_text" />
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:visibility="gone"
+            android:id="@+id/animationView"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:elevation="@dimen/_10sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@id/searchView"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_2" />
+
+        <!--        android:elevation="@dimen/_10sdp"     &lt;!&ndash; Higher than GridView's elevation &ndash;&gt;-->
+
 
         <GridView
             android:id="@+id/gridView"
@@ -53,10 +72,11 @@
             android:elevation="@dimen/_5sdp"
             android:gravity="center"
             android:numColumns="2"
-            app:layout_constraintTop_toBottomOf="@id/searchView"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/searchView" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,32 +16,31 @@
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_170sdp"
+            android:background="@drawable/search_bg"
             android:elevation="7dp"
+            android:padding="@dimen/_5ssp"
             app:iss_auto_cycle="true"
             app:iss_corner_radius="30"
             app:iss_delay="2000"
             app:iss_period="2000"
             app:iss_text_align="CENTER"
-            app:layout_constraintTop_toTopOf="parent"
-            android:padding="@dimen/_5ssp"
-            android:background="@drawable/search_bg"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-<!--        <com.denzcoskun.imageslider.ImageSlider-->
-<!--            android:id="@+id/image_slider"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="@dimen/_180sdp"-->
-<!--            android:background="@drawable/search_bg"-->
-<!--            app:iss_auto_cycle="true"-->
-<!--            app:iss_delay="700"-->
-<!--            app:iss_error_image="@drawable/shaon"-->
-<!--            app:iss_period="2000"-->
-<!--            app:iss_placeholder="@drawable/shaon"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:padding="@dimen/_10sdp"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <!--        <com.denzcoskun.imageslider.ImageSlider-->
+        <!--            android:id="@+id/image_slider"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/_180sdp"-->
+        <!--            android:background="@drawable/search_bg"-->
+        <!--            app:iss_auto_cycle="true"-->
+        <!--            app:iss_delay="700"-->
+        <!--            app:iss_error_image="@drawable/shaon"-->
+        <!--            app:iss_period="2000"-->
+        <!--            app:iss_placeholder="@drawable/shaon"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            android:padding="@dimen/_10sdp"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/productTitle"
@@ -126,6 +125,32 @@
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintTop_toBottomOf="@id/productRating" />
+
+
+        <Button
+            android:id="@+id/addToCart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:text="Add to Cart"
+            android:textColor="@color/cart_text_color"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/viewCart"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <Button
+            android:id="@+id/viewCart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:text="View Cart"
+            android:textColor="@color/cart_text_color"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/addToCart" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

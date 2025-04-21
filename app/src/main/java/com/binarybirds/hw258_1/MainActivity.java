@@ -23,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     GridView gridView;
     SearchView searchView;
     ImageView cartView;
+    LottieAnimationView animationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         gridView = findViewById(R.id.gridView);
         cartView = findViewById(R.id.cartView);
+        animationView = findViewById(R.id.animationView);
+
+        animationView.setVisibility(View.VISIBLE);
 
         // Set up search functionality
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -218,17 +223,20 @@ public class MainActivity extends AppCompatActivity {
                     MyAdapter myAdapter = new MyAdapter(arrayList);
                     gridView.setAdapter(myAdapter);
 
+                    animationView.setVisibility(View.GONE);
                     Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
+                    animationView.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
+                animationView.setVisibility(View.GONE);
             }
         });
 
