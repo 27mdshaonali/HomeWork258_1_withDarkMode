@@ -2,15 +2,20 @@ package com.binarybirds.hw258_1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.AnimationTypes;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +46,8 @@ public class ProductsDetails extends AppCompatActivity {
 
         Button addToCart = findViewById(R.id.addToCart);
         Button viewCart = findViewById(R.id.viewCart);
+
+        ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
 
         // Set up image slider
         List<SlideModel> slideModels = new ArrayList<>();
@@ -115,8 +122,10 @@ public class ProductsDetails extends AppCompatActivity {
 
         //============================================== ==========================================//
 
-        viewCart.setOnClickListener(v -> cartView());
 
+        addToCart.setOnClickListener(v -> addToCart());
+
+        viewCart.setOnClickListener(v -> cartView());
 
 
     }
@@ -127,5 +136,65 @@ public class ProductsDetails extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void addToCart() {
+        // Inflate the layout
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View myView = layoutInflater.inflate(R.layout.add_to_cart_product, null);
+
+        // Create LayoutParams with constraints
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+        // Assign a new unique ID to the view (required for constraints)
+        myView.setId(View.generateViewId());
+
+        // Set constraints: 10dp above the Add Cart button
+
+        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        params.topToBottom = R.id.addToCart;
+        //params.topToBottom = R.id.addToCart;
+        params.bottomMargin = (int) (120 * getResources().getDisplayMetrics().density); // 10dp to px
+        //params.bottomMargin = (int) getResources().getDimension(R.dimen.); // use your 10dp dimension
+
+        // Apply the params
+        myView.setLayoutParams(params);
+
+        // Add to parent layout
+        ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
+        mainContainer.addView(myView);
+
+        // Initialize inner views if needed
+        TextView qty = myView.findViewById(R.id.qty);
+        qty.setText("1");
+
+        // You can set up plus/minus click listeners here too if you want
+
+        RoundedImageView plus = myView.findViewById(R.id.qtyPlus);
+        RoundedImageView minus = myView.findViewById(R.id.qtyMinus);
+        Button btnSubmit = myView.findViewById(R.id.btnSubmit);
+
+        btnSubmit.setOnClickListener(view -> {
+            // Remove the view from the parent layout
+            mainContainer.removeView(myView);
+            Toast.makeText(this, "Product added to cart", Toast.LENGTH_SHORT).show();
+        });
+
+        minus.setOnClickListener(v -> {
+            int currentQty = Integer.parseInt(qty.getText().toString());
+            if (currentQty > 1) {
+                qty.setText(String.valueOf(currentQty - 1));
+            }
+        });
+
+
+        plus.setOnClickListener(v -> {
+            int currentQty = Integer.parseInt(qty.getText().toString());
+            qty.setText(String.valueOf(currentQty + 1));
+        });
+
+    }
+
 
 }

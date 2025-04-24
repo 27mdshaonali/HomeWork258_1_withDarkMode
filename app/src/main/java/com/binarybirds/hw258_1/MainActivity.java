@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -50,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     GridView gridView;
     SearchView searchView;
     ImageView cartView;
-    LottieAnimationView animationView;
+    LottieAnimationView animationView, noInternetAnimation;
+    ConstraintLayout checkInternetConnection, contentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.gridView);
         cartView = findViewById(R.id.cartView);
         animationView = findViewById(R.id.animationView);
-
+        checkInternetConnection = findViewById(R.id.checkInternetConnection);
+        contentContainer = findViewById(R.id.contentContainer);
+        noInternetAnimation = findViewById(R.id.noInternetAnimation);
         animationView.setVisibility(View.VISIBLE);
 
         // Set up search functionality
@@ -88,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        NoInternet();
         parseData();
         cartView.setOnClickListener(v -> cartView());
     }
@@ -225,18 +232,23 @@ public class MainActivity extends AppCompatActivity {
                     gridView.setAdapter(myAdapter);
 
                     animationView.setVisibility(View.GONE);
-                    Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
                     animationView.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
+
+                if (NoInternet()) {
+                    Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
+                }
+
                 animationView.setVisibility(View.GONE);
             }
         });
@@ -250,6 +262,22 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), CartView.class);
         startActivity(intent);
 
+    }
+
+    public boolean NoInternet() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            checkInternetConnection.setVisibility(View.VISIBLE);
+            contentContainer.setVisibility(View.GONE);
+        } else {
+            checkInternetConnection.setVisibility(View.GONE);
+            contentContainer.setVisibility(View.VISIBLE);
+        }
+
+        return false;
     }
 
     public class MyAdapter extends BaseAdapter implements Filterable {
