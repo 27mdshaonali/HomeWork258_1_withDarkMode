@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
             discountAmount.setText("%" + price);
             discountAmount.setPaintFlags(discountAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-            Toast.makeText(getApplicationContext(), "Total: " + total, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Total: " + total, Toast.LENGTH_SHORT).show();
 
 
             // Set click listener for the item
@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("product", selectedProduct);
                 startActivity(intent);
 
-                Toast.makeText(getApplicationContext(), "Clicked on: " + selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Clicked on: " + selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
 
             });
 
