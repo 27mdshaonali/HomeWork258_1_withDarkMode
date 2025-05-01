@@ -175,6 +175,7 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@color/card_background"
+                android:visibility="gone"
                 app:cardCornerRadius="@dimen/_8sdp"
                 app:cardElevation="@dimen/_3sdp"
                 app:cardUseCompatPadding="true"

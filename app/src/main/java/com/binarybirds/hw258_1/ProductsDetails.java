@@ -1,10 +1,13 @@
 package com.binarybirds.hw258_1;
 
+import static android.R.anim.slide_in_left;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,47 +127,56 @@ public class ProductsDetails extends AppCompatActivity {
         }
 
         //============== Button Click Listeners ==============//
-        addToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Remove any existing cart view first
-                View existingView = mainContainer.findViewById(R.id.mainCard);
-                if (existingView != null) {
-                    mainContainer.removeView(existingView);
-                }
+//        addToCart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Remove any existing cart view first
+//                View existingView = mainContainer.findViewById(R.id.mainCard);
+//                if (existingView != null) {
+//                    mainContainer.removeView(existingView);
+//                }
+//
+//                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                View myView = layoutInflater.inflate(R.layout.add_to_cart_product, null);
+//                myView.setId(R.id.mainCard); // Set an ID so we can find it later
+//
+//                RoundedImageView productImage = myView.findViewById(R.id.productImage);
+//                TextView qty = myView.findViewById(R.id.qty);
+//                TextView qtyMinus = myView.findViewById(R.id.qtyMinus);
+//                TextView qtyPlus = myView.findViewById(R.id.qtyPlus);
+//                Button btnSubmit = myView.findViewById(R.id.btnSubmit);
+//
+//                productImage.setImageResource(R.drawable.shaon);
+//                qty.setText("1");
+//                btnSubmit.setText("Submit");
+//
+//                qtyMinus.setOnClickListener(view -> {
+//                    int currentQty = Integer.parseInt(qty.getText().toString());
+//                    if (currentQty > 1) {
+//                        currentQty--;
+//                        qty.setText(String.valueOf(currentQty));
+//                    }
+//                });
+//
+//                qtyPlus.setOnClickListener(view -> {
+//                    int currentQty = Integer.parseInt(qty.getText().toString());
+//                    currentQty++;
+//                    qty.setText(String.valueOf(currentQty));
+//                });
+//
+//                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+//
+//                mainContainer.addView(myView, params);
+//            }
+//        });
 
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View myView = layoutInflater.inflate(R.layout.add_to_cart_product, null);
-                myView.setId(R.id.mainCard); // Set an ID so we can find it later
 
-                RoundedImageView productImage = myView.findViewById(R.id.productImage);
-                TextView qty = myView.findViewById(R.id.qty);
-                TextView qtyMinus = myView.findViewById(R.id.qtyMinus);
-                TextView qtyPlus = myView.findViewById(R.id.qtyPlus);
-                Button btnSubmit = myView.findViewById(R.id.btnSubmit);
+        addToCart.setOnClickListener(v -> {
 
-                productImage.setImageResource(R.drawable.shaon);
-                qty.setText("1");
-                btnSubmit.setText("Submit");
+            mainCard.setVisibility(View.VISIBLE);
+            mainCard.startAnimation(AnimationUtils.loadAnimation(this, R.anim.up_from_bottom));
 
-                qtyMinus.setOnClickListener(view -> {
-                    int currentQty = Integer.parseInt(qty.getText().toString());
-                    if (currentQty > 1) {
-                        currentQty--;
-                        qty.setText(String.valueOf(currentQty));
-                    }
-                });
 
-                qtyPlus.setOnClickListener(view -> {
-                    int currentQty = Integer.parseInt(qty.getText().toString());
-                    currentQty++;
-                    qty.setText(String.valueOf(currentQty));
-                });
-
-                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-
-                mainContainer.addView(myView, params);
-            }
         });
 
 
@@ -172,8 +184,16 @@ public class ProductsDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ProductsDetails.this, "Opening Cart", Toast.LENGTH_SHORT).show();
+                if (mainCard.getVisibility() == View.VISIBLE) {
+                    mainCard.startAnimation(AnimationUtils.loadAnimation(ProductsDetails.this, R.anim.bottom_from_up));
+                    mainCard.setVisibility(View.GONE);
+                }
             }
         });
+
+
+
+
         //============== End of Button Click Listeners ==============//
 
     }
