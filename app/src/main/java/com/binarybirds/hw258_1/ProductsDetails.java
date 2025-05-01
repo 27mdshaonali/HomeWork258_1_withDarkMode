@@ -1,13 +1,16 @@
 package com.binarybirds.hw258_1;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.denzcoskun.imageslider.ImageSlider;
@@ -15,6 +18,7 @@ import com.denzcoskun.imageslider.constants.AnimationTypes;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +37,7 @@ public class ProductsDetails extends AppCompatActivity {
         //============== Initialize Views ==============//
         ImageSlider imageSlider = findViewById(R.id.image_slider);
 
+
         TextView productTitle = findViewById(R.id.productTitle);
         TextView productDescription = findViewById(R.id.productDescription);
         TextView productOfferPrice = findViewById(R.id.productPrice);
@@ -44,6 +49,7 @@ public class ProductsDetails extends AppCompatActivity {
 
         Button addToCart = findViewById(R.id.addToCart);
         Button viewCart = findViewById(R.id.viewCart);
+        CardView mainCard = findViewById(R.id.mainCard);
 
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
 
@@ -121,9 +127,46 @@ public class ProductsDetails extends AppCompatActivity {
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductsDetails.this, "Product Added to Cart", Toast.LENGTH_SHORT).show();
+                // Remove any existing cart view first
+                View existingView = mainContainer.findViewById(R.id.mainCard);
+                if (existingView != null) {
+                    mainContainer.removeView(existingView);
+                }
+
+                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View myView = layoutInflater.inflate(R.layout.add_to_cart_product, null);
+                myView.setId(R.id.mainCard); // Set an ID so we can find it later
+
+                RoundedImageView productImage = myView.findViewById(R.id.productImage);
+                TextView qty = myView.findViewById(R.id.qty);
+                TextView qtyMinus = myView.findViewById(R.id.qtyMinus);
+                TextView qtyPlus = myView.findViewById(R.id.qtyPlus);
+                Button btnSubmit = myView.findViewById(R.id.btnSubmit);
+
+                productImage.setImageResource(R.drawable.shaon);
+                qty.setText("1");
+                btnSubmit.setText("Submit");
+
+                qtyMinus.setOnClickListener(view -> {
+                    int currentQty = Integer.parseInt(qty.getText().toString());
+                    if (currentQty > 1) {
+                        currentQty--;
+                        qty.setText(String.valueOf(currentQty));
+                    }
+                });
+
+                qtyPlus.setOnClickListener(view -> {
+                    int currentQty = Integer.parseInt(qty.getText().toString());
+                    currentQty++;
+                    qty.setText(String.valueOf(currentQty));
+                });
+
+                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+                mainContainer.addView(myView, params);
             }
         });
+
 
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
