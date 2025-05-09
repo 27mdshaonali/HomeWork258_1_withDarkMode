@@ -70,5 +70,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
     //noinspection UseTomlInstead
     implementation 'com.airbnb.android:lottie:6.6.6'
+    //noinspection UseTomlInstead
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 }

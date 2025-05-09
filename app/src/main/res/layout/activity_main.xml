@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -5,10 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.airbnb.lottie.LottieAnimationView
@@ -35,7 +32,6 @@
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/no_internet_2" />
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,78 +45,78 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!-- Inner container with padding -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/contentContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="@dimen/_5sdp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
-            android:background="@drawable/search_bg"
-            app:defaultQueryHint="Search here"
-            app:goIcon="@drawable/shaon"
-            app:hideNavigationIcon="true"
-            app:iconifiedByDefault="false"
-            app:layout_constraintEnd_toStartOf="@id/cartView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:queryHint="Search here" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_5sdp">
 
-        <ImageView
-            android:id="@+id/cartView"
-            android:layout_width="@dimen/_35sdp"
-            android:layout_height="@dimen/_36sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
-            android:scaleType="fitXY"
-            android:src="@drawable/cart_without_product"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary_text" />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:background="@drawable/search_bg"
+                app:defaultQueryHint="Search here"
+                app:goIcon="@drawable/shaon"
+                app:hideNavigationIcon="true"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toStartOf="@id/cartView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:queryHint="Search here" />
 
+            <ImageView
+                android:id="@+id/cartView"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/cart_without_product"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/primary_text" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/animationView"
-            android:layout_width="@dimen/_160sdp"
-            android:layout_height="@dimen/_160sdp"
-            android:elevation="@dimen/_10sdp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchView"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading_2" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_160sdp"
+                android:elevation="@dimen/_10sdp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchView"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_2" />
 
-        <!--        android:elevation="@dimen/_10sdp"     &lt;!&ndash; Higher than GridView's elevation &ndash;&gt;-->
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_18sdp"
+                android:elevation="@dimen/_5sdp"
+                android:gravity="center"
+                android:numColumns="2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchView" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <GridView
-            android:id="@+id/gridView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_18sdp"
-            android:elevation="@dimen/_5sdp"
-            android:gravity="center"
-            android:numColumns="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchView" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

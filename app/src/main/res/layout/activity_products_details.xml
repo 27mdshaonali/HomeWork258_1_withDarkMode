@@ -143,6 +143,19 @@
                 app:layout_constraintTop_toBottomOf="@id/productRating" />
 
 
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_27sdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/addToCart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/productCategory"
+                app:layout_constraintVertical_bias="1.0" />
+
+
             <Button
                 android:id="@+id/addToCart"
                 android:layout_width="0dp"
@@ -150,7 +163,7 @@
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:text="Add to Cart"
                 android:textColor="@color/cart_text_color"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_15ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/viewCart"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -163,7 +176,7 @@
                 android:layout_marginStart="@dimen/_5sdp"
                 android:text="View Cart"
                 android:textColor="@color/cart_text_color"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_15ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/addToCart" />

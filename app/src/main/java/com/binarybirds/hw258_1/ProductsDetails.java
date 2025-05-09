@@ -1,7 +1,6 @@
 package com.binarybirds.hw258_1;
 
-import static android.R.anim.slide_in_left;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,13 +34,9 @@ public class ProductsDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_details);
 
-        //============== Get the passed product data ==============//
         HashMap<String, String> product = (HashMap<String, String>) getIntent().getSerializableExtra("product");
 
-        //============== Initialize Views ==============//
         ImageSlider imageSlider = findViewById(R.id.image_slider);
-
-
         TextView productTitle = findViewById(R.id.productTitle);
         TextView productDescription = findViewById(R.id.productDescription);
         TextView productOfferPrice = findViewById(R.id.productPrice);
@@ -53,43 +49,40 @@ public class ProductsDetails extends AppCompatActivity {
         Button addToCart = findViewById(R.id.addToCart);
         Button viewCart = findViewById(R.id.viewCart);
         CardView mainCard = findViewById(R.id.mainCard);
-
+        LinearLayout linearLayout = findViewById(R.id.linearLayout);
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
 
-        //============== Set the product data to the views ==============//
         if (product != null) {
             try {
-                String title = product.get("title"); //==============Title====================
-                String description = product.get("description"); //==============Description====================
-                String price = product.get("price"); //==============Price====================
-                String discount = product.get("discountPercentage"); //==============Discount in Percentage====================
-                String rating = product.get("rating"); //==============Rating====================
-                String stock = product.get("stock"); //==============Stock====================
-                String brand = product.get("brand"); //==============Brand====================
-                String category = product.get("category"); //==============Category====================
-                String[] images = product.get("images").split(","); //==============Images====================
+                String title = product.get("title");
+                String description = product.get("description");
+                String price = product.get("price");
+                String discount = product.get("discountPercentage");
+                String rating = product.get("rating");
+                String stock = product.get("stock");
+                String brand = product.get("brand");
+                String category = product.get("category");
+                String[] images = product.get("images").split(",");
 
-                productTitle.setText(title); //==============Set Title====================
-                productDescription.setText(description); //==============Set Description====================
+                productTitle.setText(title);
+                productDescription.setText(description);
 
                 double mainPriceDouble = Double.parseDouble(price);
                 double disDouble = Double.parseDouble(discount);
                 String disPercentage = String.format("%.2f", disDouble);
                 String discountedPriceDouble = String.format("%.2f", mainPriceDouble - (mainPriceDouble * disDouble / 100));
-                productOfferPrice.setText("Offer Price :  $" + discountedPriceDouble + " (After " + disPercentage + "% Off)"); //==============Set Discounted Price====================
-                productMainPrice.setText("Price :  $" + price); //==============Set Original Price====================
-                productMainPrice.setPaintFlags(productMainPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG); //==============Strike Through Price====================
+                productOfferPrice.setText("Offer Price :  $" + discountedPriceDouble + " (After " + disPercentage + "% Off)");
+                productMainPrice.setText("Price :  $" + price);
+                productMainPrice.setPaintFlags(productMainPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
 
-                productRating.setText("Rating :  " + rating + " / 5"); //==============Set Rating====================
+                productRating.setText("Rating :  " + rating + " / 5");
 
                 int stockInt = Integer.parseInt(stock);
-                productStock.setText("Stock :  " + stockInt); //==============Set Stock====================
+                productStock.setText("Stock :  " + stockInt);
 
-                productBrand.setText("Brand : " + brand); //==============Set Brand====================
-                productCategory.setText("Category :  " + category); //==============Set Category====================
+                productBrand.setText("Brand : " + brand);
+                productCategory.setText("Category :  " + category);
 
-
-                //============== IMAGE SLIDER SETUP ==============//
                 List<SlideModel> slideModels = new ArrayList<>();
 
                 if (images.length > 0) {
@@ -105,7 +98,6 @@ public class ProductsDetails extends AppCompatActivity {
                     imageSlider.setItemClickListener(new ItemClickListener() {
                         @Override
                         public void doubleClick(int i) {
-                            //Toast.makeText(ProductsDetails.this, "Item double Clicked " + (i + 1), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -113,12 +105,7 @@ public class ProductsDetails extends AppCompatActivity {
                             Toast.makeText(ProductsDetails.this, "Clicked image " + (position + 1), Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
                 }
-
-                //============== End of Image Slider Setup ==============//
-
             } catch (Exception e) {
                 Log.e("ProductsDetails", "Error setting product data: " + e.getMessage());
                 e.printStackTrace();
@@ -126,59 +113,39 @@ public class ProductsDetails extends AppCompatActivity {
             }
         }
 
-        //============== Button Click Listeners ==============//
-//        addToCart.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Remove any existing cart view first
-//                View existingView = mainContainer.findViewById(R.id.mainCard);
-//                if (existingView != null) {
-//                    mainContainer.removeView(existingView);
-//                }
-//
-//                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                View myView = layoutInflater.inflate(R.layout.add_to_cart_product, null);
-//                myView.setId(R.id.mainCard); // Set an ID so we can find it later
-//
-//                RoundedImageView productImage = myView.findViewById(R.id.productImage);
-//                TextView qty = myView.findViewById(R.id.qty);
-//                TextView qtyMinus = myView.findViewById(R.id.qtyMinus);
-//                TextView qtyPlus = myView.findViewById(R.id.qtyPlus);
-//                Button btnSubmit = myView.findViewById(R.id.btnSubmit);
-//
-//                productImage.setImageResource(R.drawable.shaon);
-//                qty.setText("1");
-//                btnSubmit.setText("Submit");
-//
-//                qtyMinus.setOnClickListener(view -> {
-//                    int currentQty = Integer.parseInt(qty.getText().toString());
-//                    if (currentQty > 1) {
-//                        currentQty--;
-//                        qty.setText(String.valueOf(currentQty));
-//                    }
-//                });
-//
-//                qtyPlus.setOnClickListener(view -> {
-//                    int currentQty = Integer.parseInt(qty.getText().toString());
-//                    currentQty++;
-//                    qty.setText(String.valueOf(currentQty));
-//                });
-//
-//                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-//
-//                mainContainer.addView(myView, params);
-//            }
-//        });
+        try {
+            addToCart.setOnClickListener(v -> {
+                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View productView = layoutInflater.inflate(R.layout.add_to_cart_product, linearLayout, false);
+
+                linearLayout.removeAllViews();
+                linearLayout.addView(productView);
+
+                if (linearLayout.getVisibility() != View.VISIBLE) {
+                    linearLayout.setVisibility(View.VISIBLE);
+                    linearLayout.startAnimation(AnimationUtils.loadAnimation(ProductsDetails.this, R.anim.bottom_from_up));
+                }
+
+                RoundedImageView productImage = productView.findViewById(R.id.productImage);
+                TextView qty = productView.findViewById(R.id.qty);
+                RoundedImageView qtyMinus = productView.findViewById(R.id.qtyMinus);
+                RoundedImageView qtyPlus = productView.findViewById(R.id.qtyPlus);
+                Button btnSubmit = productView.findViewById(R.id.btnSubmit);
+
+                qtyPlus.setOnClickListener(plusView -> {
+
+                    int currentQty = Integer.parseInt(qty.getText().toString());
+                    currentQty++;
+                    qty.setText(String.valueOf(currentQty));
 
 
-        addToCart.setOnClickListener(v -> {
-
-            mainCard.setVisibility(View.VISIBLE);
-            mainCard.startAnimation(AnimationUtils.loadAnimation(this, R.anim.up_from_bottom));
+                });
 
 
-        });
-
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,12 +157,5 @@ public class ProductsDetails extends AppCompatActivity {
                 }
             }
         });
-
-
-
-
-        //============== End of Button Click Listeners ==============//
-
     }
-
 }

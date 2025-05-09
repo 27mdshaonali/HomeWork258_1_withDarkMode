@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -25,6 +30,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
@@ -39,13 +45,15 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String PRODUCT_URL = "https://dummyjson.com/products";
-    //public static String PRODUCT_URL = "https://codecanvas.top/Complex%20JSon/HW258_1.json";
 
     ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
     HashMap<String, String> hashMap = new HashMap<>();
@@ -53,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     GridView gridView;
     SearchView searchView;
     ImageView cartView;
+    SwipeRefreshLayout swipeRefreshLayout;
     LottieAnimationView animationView, noInternetAnimation;
     ConstraintLayout checkInternetConnection, contentContainer;
 
@@ -78,9 +87,34 @@ public class MainActivity extends AppCompatActivity {
         checkInternetConnection = findViewById(R.id.checkInternetConnection);
         contentContainer = findViewById(R.id.contentContainer);
         noInternetAnimation = findViewById(R.id.noInternetAnimation);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
         animationView.setVisibility(View.VISIBLE);
 
-        // Set up search functionality
+        // Set swipeRefreshLayout listener
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Vibrate to give feedback
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null && vibrator.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
+            }
+
+            arrayList.clear();
+            parseData();
+
+            // Bounce animation on GridView
+            Animation bounce = new ScaleAnimation(1f, 1.05f, 1f, 1.05f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            bounce.setDuration(300);
+            bounce.setRepeatCount(1);
+            bounce.setRepeatMode(Animation.REVERSE);
+            gridView.startAnimation(bounce);
+
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -96,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         NoInternet();
         parseData();
+
         cartView.setOnClickListener(v -> cartView());
     }
 
@@ -108,16 +143,11 @@ public class MainActivity extends AppCompatActivity {
                     int skip = response.getInt("skip");
                     int limit = response.getInt("limit");
 
-                    //Toast.makeText(MainActivity.this, "Total: " + total + " | Skip: " + skip + " | Limit: " + limit, Toast.LENGTH_SHORT).show();
-
                     JSONArray jsonArray = response.getJSONArray("products");
-
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-
-                        // Main Product Data
                         String id = jsonObject.optString("id");
                         String title = jsonObject.optString("title");
                         String description = jsonObject.optString("description");
@@ -136,20 +166,17 @@ public class MainActivity extends AppCompatActivity {
                         int minimumOrderQuantity = jsonObject.optInt("minimumOrderQuantity");
                         String thumbnail = jsonObject.optString("thumbnail", "");
 
-                        // Dimensions Object
                         JSONObject dimensions = jsonObject.optJSONObject("dimensions");
                         double width = dimensions != null ? dimensions.optDouble("width") : 0;
                         double height = dimensions != null ? dimensions.optDouble("height") : 0;
                         double depth = dimensions != null ? dimensions.optDouble("depth") : 0;
 
-                        // Meta Object
                         JSONObject meta = jsonObject.optJSONObject("meta");
                         String createdAt = meta != null ? meta.optString("createdAt") : "";
                         String updatedAt = meta != null ? meta.optString("updatedAt") : "";
                         String barcode = meta != null ? meta.optString("barcode") : "";
                         String qrCode = meta != null ? meta.optString("qrCode") : "";
 
-                        // Tags Array
                         JSONArray tagsArray = jsonObject.optJSONArray("tags");
                         StringBuilder tags = new StringBuilder();
                         if (tagsArray != null) {
@@ -159,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Images Array
                         JSONArray imagesArray = jsonObject.optJSONArray("images");
                         StringBuilder images = new StringBuilder();
                         if (imagesArray != null) {
@@ -169,25 +195,21 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Reviews Array
                         JSONArray reviewsArray = jsonObject.optJSONArray("reviews");
                         StringBuilder reviews = new StringBuilder();
                         if (reviewsArray != null) {
                             for (int j = 0; j < reviewsArray.length(); j++) {
                                 JSONObject review = reviewsArray.optJSONObject(j);
                                 if (review != null) {
-                                    reviews.append("[").append(review.optString("reviewerName", "Anonymous")).append(" | ").append("Rating: ").append(review.optInt("rating")).append(" | ").append(review.optString("comment", "No comment")).append("]\n");
+                                    reviews.append("[").append(review.optString("reviewerName", "Anonymous")).append(" | Rating: ").append(review.optInt("rating")).append(" | ").append(review.optString("comment", "No comment")).append("]\n");
                                 }
                             }
                         }
 
-                        // Add to HashMap
                         HashMap<String, String> hashMap = new HashMap<>();
-
                         hashMap.put("total", String.valueOf(total));
                         hashMap.put("skip", String.valueOf(skip));
                         hashMap.put("limit", String.valueOf(limit));
-
 
                         hashMap.put("id", id);
                         hashMap.put("title", title);
@@ -207,77 +229,108 @@ public class MainActivity extends AppCompatActivity {
                         hashMap.put("minimumOrderQuantity", String.valueOf(minimumOrderQuantity));
                         hashMap.put("thumbnail", thumbnail);
 
-                        // Dimensions
                         hashMap.put("width", String.valueOf(width));
                         hashMap.put("height", String.valueOf(height));
                         hashMap.put("depth", String.valueOf(depth));
 
-                        // Meta
                         hashMap.put("createdAt", createdAt);
                         hashMap.put("updatedAt", updatedAt);
                         hashMap.put("barcode", barcode);
                         hashMap.put("qrCode", qrCode);
 
-                        // Arrays
                         hashMap.put("tags", tags.toString());
                         hashMap.put("images", images.toString());
                         hashMap.put("reviews", reviews.toString());
 
-                        // Add to list
                         arrayList.add(hashMap);
                     }
 
-                    // Set adapter
                     MyAdapter myAdapter = new MyAdapter(arrayList);
                     gridView.setAdapter(myAdapter);
-
                     animationView.setVisibility(View.GONE);
-                    //Toast.makeText(MainActivity.this, "Products Loaded!", Toast.LENGTH_SHORT).show();
+
+                    swipeRefreshLayout.setRefreshing(false); // Stop the refreshing animation
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    //Toast.makeText(MainActivity.this, "Parsing Error!", Toast.LENGTH_SHORT).show();
                     animationView.setVisibility(View.GONE);
                 }
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
-
                 if (NoInternet()) {
                     Toast.makeText(MainActivity.this, "Server Error!", Toast.LENGTH_SHORT).show();
                 }
-
                 animationView.setVisibility(View.GONE);
             }
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(objectRequest);
+
+
+        // ✅ Add this block after the request is added to the queue
+        // Show toast after 5 seconds if still loading
+        new android.os.Handler().postDelayed(() -> {
+            if (animationView.getVisibility() == View.VISIBLE) {
+                checkInternetAccess(new InternetCheckCallback() {
+                    @Override
+                    public void onResult(boolean isConnected) {
+                        runOnUiThread(() -> {
+                            if (!isConnected && animationView.getVisibility() == View.VISIBLE) {
+                                animationView.setVisibility(View.GONE);
+                                checkInternetConnection.setVisibility(View.VISIBLE);
+                                contentContainer.setVisibility(View.GONE);
+                                Toast.makeText(MainActivity.this, "Server is not responding. Please try again later.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
+        }, 5000);
+
+
+    }
+
+    public void checkInternetAccess(InternetCheckCallback callback) {
+        new Thread(() -> {
+            try {
+                HttpURLConnection connection = (HttpURLConnection) new URL("https://clients3.google.com/generate_204").openConnection();
+                connection.setRequestProperty("User-Agent", "Android");
+                connection.setRequestProperty("Connection", "close");
+                connection.setConnectTimeout(3000); // 3 seconds
+                connection.connect();
+                callback.onResult(connection.getResponseCode() == 204);
+            } catch (IOException e) {
+                callback.onResult(false);
+            }
+        }).start();
     }
 
     public void cartView() {
-
         Intent intent = new Intent(getApplicationContext(), CartView.class);
         startActivity(intent);
-
     }
 
     public boolean NoInternet() {
-
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo == null || !networkInfo.isConnected()) {
             checkInternetConnection.setVisibility(View.VISIBLE);
             contentContainer.setVisibility(View.GONE);
+            return true; // Return true if there is no internet
         } else {
             checkInternetConnection.setVisibility(View.GONE);
             contentContainer.setVisibility(View.VISIBLE);
+            return false; // Return false if the internet is connected
         }
+    }
 
-        return false;
+    public interface InternetCheckCallback {
+        void onResult(boolean isConnected);
     }
 
     public class MyAdapter extends BaseAdapter implements Filterable {
@@ -352,6 +405,7 @@ public class MainActivity extends AppCompatActivity {
             TextView idNo = myView.findViewById(R.id.idNo);
 
             HashMap<String, String> hashMap = filteredList.get(i);
+
             String total = hashMap.get("total");
             String skip = hashMap.get("skip");
             String limit = hashMap.get("limit");
@@ -363,41 +417,26 @@ public class MainActivity extends AppCompatActivity {
             String price = hashMap.get("price");
             String discountPercentage = hashMap.get("discountPercentage");
 
-            // Load image
             Picasso.get().load(thumbnail).placeholder(R.drawable.shaon).into(itemLayoutImage);
 
-            // Set text values
             idNo.setText("ID No: " + id);
             itemName.setText(title);
             category1.setText(category);
 
-            // Calculate discounted price
             double originalPrice = Double.parseDouble(price);
             double discountPercent = Double.parseDouble(discountPercentage);
             double discountedPrice = originalPrice - (originalPrice * discountPercent / 100);
 
-            // Show discounted price
             priceAfterDis.setText("$" + String.format("%.2f", discountedPrice));
-
-            // Show original price with strikethrough
-            discountAmount.setText("%" + price);
+            discountAmount.setText("$" + price + " (-" + discountPercentage + "%)");
             discountAmount.setPaintFlags(discountAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-            //Toast.makeText(getApplicationContext(), "Total: " + total, Toast.LENGTH_SHORT).show();
-
-
-            // Set click listener for the item
 
             myView.setOnClickListener(v -> {
                 HashMap<String, String> selectedProduct = filteredList.get(i);
                 Intent intent = new Intent(getApplicationContext(), ProductsDetails.class);
                 intent.putExtra("product", selectedProduct);
                 startActivity(intent);
-
-                //Toast.makeText(getApplicationContext(), "Clicked on: " + selectedProduct.get("title"), Toast.LENGTH_SHORT).show();
-
             });
-
 
             return myView;
         }
