@@ -166,6 +166,10 @@ public class MainActivity extends AppCompatActivity {
                         int minimumOrderQuantity = jsonObject.optInt("minimumOrderQuantity");
                         String thumbnail = jsonObject.optString("thumbnail", "");
 
+                        //data has parsed in ProductDetails class till this point
+
+
+                        // Data parsing for dimensions
                         JSONObject dimensions = jsonObject.optJSONObject("dimensions");
                         double width = dimensions != null ? dimensions.optDouble("width") : 0;
                         double height = dimensions != null ? dimensions.optDouble("height") : 0;

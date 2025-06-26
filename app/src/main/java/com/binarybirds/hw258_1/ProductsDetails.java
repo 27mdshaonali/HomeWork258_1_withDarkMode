@@ -64,6 +64,13 @@ public class ProductsDetails extends AppCompatActivity {
                 String category = product.get("category");
                 String[] images = product.get("images").split(",");
 
+                String sku = product.get("sku");
+                String warrantyInformation = product.get("warrantyInformation");
+                String shippingInformation = product.get("shippingInformation");
+                String availabilityStatus = product.get("availabilityStatus");
+                String returnPolicy = product.get("returnPolicy");
+                int minimumOrderQuantity = Integer.parseInt(product.get("minimumOrderQuantity"));
+
                 productTitle.setText(title);
                 productDescription.setText(description);
 
