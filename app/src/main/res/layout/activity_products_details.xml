@@ -133,23 +133,117 @@
                 app:layout_constraintTop_toBottomOf="@id/productBrand" />
 
             <TextView
-                android:id="@+id/productCategory"
+                android:id="@+id/weight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="productCategory"
+                android:text="weight"
                 android:textColor="@color/primary_text"
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintTop_toBottomOf="@id/productRating" />
 
+            <TextView
+                android:id="@+id/dimensions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="dimensions"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/weight" />
+
+            <TextView
+                android:id="@+id/width"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:text="width"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintTop_toBottomOf="@id/dimensions" />
+
+            <TextView
+                android:id="@+id/height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:text="height"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintTop_toBottomOf="@id/width" />
+
+            <TextView
+                android:id="@+id/depth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:text="depth"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintTop_toBottomOf="@id/height" />
+
+            <TextView
+                android:id="@+id/warrantyInformation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="warrantyInformation"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/depth" />
+
+            <TextView
+                android:id="@+id/shippingInformation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="shippingInformation"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/warrantyInformation" />
+
+            <TextView
+                android:id="@+id/availabilityStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="availabilityStatus"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/shippingInformation" />
+
+            <TextView
+                android:id="@+id/reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:text="Reviews"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_14ssp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/availabilityStatus" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/productCategory"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/_5sdp"-->
+<!--                android:text="productCategory"-->
+<!--                android:textColor="@color/primary_text"-->
+<!--                android:textSize="@dimen/_12ssp"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/productRating" />-->
+
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_27sdp"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/addToCart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/productCategory"
@@ -195,17 +289,6 @@
                 app:layout_constraintBottom_toTopOf="@id/addToCart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
-
-
-
-
-
-
-
-
-
-
-
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout

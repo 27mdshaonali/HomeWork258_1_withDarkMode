@@ -23,6 +23,9 @@ import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,12 +67,49 @@ public class ProductsDetails extends AppCompatActivity {
                 String category = product.get("category");
                 String[] images = product.get("images").split(",");
 
+
+                /*
+
                 String sku = product.get("sku");
                 String warrantyInformation = product.get("warrantyInformation");
                 String shippingInformation = product.get("shippingInformation");
                 String availabilityStatus = product.get("availabilityStatus");
                 String returnPolicy = product.get("returnPolicy");
                 int minimumOrderQuantity = Integer.parseInt(product.get("minimumOrderQuantity"));
+
+                JSONObject dimensionsObject = new JSONObject(product.get("dimensions"));
+                double width = dimensionsObject != null ? dimensionsObject.getDouble("width") : 0;
+                double height = dimensionsObject != null ? dimensionsObject.getDouble("height") : 0;
+                double depth = dimensionsObject != null ? dimensionsObject.getDouble("depth") : 0;
+
+                JSONObject meta = new JSONObject(product.get("meta"));
+                String createdAt = meta != null ? meta.getString("createdAt") : "";
+                String updatedAt = meta != null ? meta.getString("updatedAt") : "";
+                String barcode = meta != null ? meta.getString("barcode") : "";
+                String qrCode = meta != null ? meta.getString("qrCode") : "";
+
+                JSONArray tagsArray = new JSONArray(product.get("tags"));
+                List<String> tags = new ArrayList<>();
+                if (tagsArray != null) {
+                    for (int i = 0; i < tagsArray.length(); i++) {
+                        tags.add(tagsArray.getString(i));
+                    }
+                }
+
+                JSONArray reviewsArray = new JSONArray(product.get("reviews"));
+                StringBuilder reviewsInfo = new StringBuilder();
+                for (int i = 0; i < reviewsArray.length(); i++) {
+                    JSONObject review = reviewsArray.getJSONObject(i);
+                    String reviewerName = review.optString("reviewerName");
+                    double ratingProduct = review.optDouble("rating");
+                    String comment = review.optString("comment");
+                    reviewsInfo.append("Reviewer: ").append(reviewerName).append(", Rating: ").append(ratingProduct).append(", Comment: ").append(comment).append("\n");
+                }
+
+                Toast.makeText(this, reviewsInfo.toString(), Toast.LENGTH_LONG).show();
+
+
+                 */
 
                 productTitle.setText(title);
                 productDescription.setText(description);
@@ -104,8 +144,7 @@ public class ProductsDetails extends AppCompatActivity {
 
                     imageSlider.setItemClickListener(new ItemClickListener() {
                         @Override
-                        public void doubleClick(int i) {
-                        }
+                        public void doubleClick(int i) {}
 
                         @Override
                         public void onItemSelected(int position) {
@@ -140,14 +179,10 @@ public class ProductsDetails extends AppCompatActivity {
                 Button btnSubmit = productView.findViewById(R.id.btnSubmit);
 
                 qtyPlus.setOnClickListener(plusView -> {
-
                     int currentQty = Integer.parseInt(qty.getText().toString());
                     currentQty++;
                     qty.setText(String.valueOf(currentQty));
-
-
                 });
-
 
             });
         } catch (Exception e) {
