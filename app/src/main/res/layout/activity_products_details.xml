@@ -250,6 +250,18 @@
                     app:layout_constraintTop_toBottomOf="@id/availabilityStatus" />
 
                 <TextView
+                    android:id="@+id/productTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="productTags"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintTop_toBottomOf="@id/productCategory" />
+
+
+
+                <TextView
                     android:id="@+id/reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -258,7 +270,7 @@
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/productCategory" />
+                    app:layout_constraintTop_toBottomOf="@id/productTags" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewsRecyclerView"

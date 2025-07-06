@@ -1,20 +1,17 @@
 package com.binarybirds.hw258_1;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +21,6 @@ import com.denzcoskun.imageslider.constants.AnimationTypes;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,8 +32,7 @@ import java.util.List;
 public class ProductsDetails extends AppCompatActivity {
 
     RecyclerView reviewsRecyclerView;
-    HashMap<String, String> hashMap;
-    ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+    ArrayList<HashMap<String, String>> arrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +50,18 @@ public class ProductsDetails extends AppCompatActivity {
         TextView productStock = findViewById(R.id.productStock);
         TextView productBrand = findViewById(R.id.productBrand);
         TextView productCategory = findViewById(R.id.productCategory);
+        TextView weight = findViewById(R.id.weight);
+        TextView tagsTextView = findViewById(R.id.productTags);
 
-        Button addToCart = findViewById(R.id.addToCart);
-        Button viewCart = findViewById(R.id.viewCart);
-        CardView mainCard = findViewById(R.id.mainCard);
+
         LinearLayout linearLayout = findViewById(R.id.linearLayout);
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
 
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView);
-        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reviewsRecyclerView.setAdapter(new MyAdapter());
+        arrayList = new ArrayList<>();
+        ReviewsAdapter reviewsAdapter = new ReviewsAdapter();
+        reviewsRecyclerView.setAdapter(reviewsAdapter);
+        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         if (product != null) {
             try {
@@ -90,12 +87,62 @@ public class ProductsDetails extends AppCompatActivity {
                 productMainPrice.setPaintFlags(productMainPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
 
                 productRating.setText("Rating :  " + rating + " / 5");
-
                 int stockInt = Integer.parseInt(stock);
                 productStock.setText("Stock :  " + stockInt);
 
                 productBrand.setText("Brand : " + brand);
                 productCategory.setText("Category :  " + category);
+
+                weight.setText("Weight :  " + product.get("weight"));
+
+
+
+
+                /*
+                if (stockInt == 0) {
+                    linearLayout.setVisibility(View.GONE);
+                    mainContainer.setVisibility(View.GONE);
+                }
+
+                 */
+
+                String tagsJson = product.get("tags");
+                if (tagsJson != null && !tagsJson.isEmpty()) {
+                    try {
+                        List<String> tagList = new ArrayList<>();
+
+                        // Case 1: Valid JSON Array (e.g., ["beauty", "mascara"])
+                        if (tagsJson.trim().startsWith("[")) {
+                            JSONArray tagsArray = new JSONArray(tagsJson);
+                            for (int i = 0; i < tagsArray.length(); i++) {
+                                tagList.add(tagsArray.getString(i));
+                            }
+                        } else {
+                            // Case 2: Comma-separated plain text (e.g., beauty,mascara)
+                            String[] parts = tagsJson.split(",");
+                            for (String part : parts) {
+                                tagList.add(part.trim());
+                            }
+                        }
+
+                        if (!tagList.isEmpty()) {
+                            String tagsText = TextUtils.join(", ", tagList);
+                            tagsTextView.setText("Tags: " + tagsText);
+                        } else {
+                            tagsTextView.setText("Tags: None");
+                        }
+
+                    } catch (Exception e) {
+                        tagsTextView.setText("Tags: Invalid format");
+                        Log.e("TAGS_PARSE", "Error parsing tags: " + e.getMessage());
+                    }
+                } else {
+                    tagsTextView.setText("Tags: None");
+                }
+
+
+
+                //====================== Image Slider Start ======================
 
                 List<SlideModel> slideModels = new ArrayList<>();
 
@@ -120,99 +167,51 @@ public class ProductsDetails extends AppCompatActivity {
                         }
                     });
                 }
+                //====================== Image Slider End ======================
 
-                // Handle reviews safely
+
                 String reviewsJson = product.get("reviews");
-                Log.d("ProductsDetails", "Raw reviews JSON: " + reviewsJson);
                 if (reviewsJson != null && !reviewsJson.isEmpty()) {
-                    try {
-                        JSONArray reviewsArray = new JSONArray(reviewsJson);
-                        for (int i = 0; i < reviewsArray.length(); i++) {
-                            JSONObject review = reviewsArray.getJSONObject(i);
-                            HashMap<String, String> reviewMap = new HashMap<>();
-                            reviewMap.put("reviewerName", review.optString("reviewerName"));
-                            reviewMap.put("reviewerEmail", review.optString("reviewerEmail"));
-                            reviewMap.put("comment", review.optString("comment"));
-                            reviewMap.put("rating", String.valueOf(review.optDouble("rating")));
-                            reviewMap.put("date", review.optString("date"));
-                            arrayList.add(reviewMap);
-                        }
-                        reviewsRecyclerView.getAdapter().notifyDataSetChanged();
-                    } catch (Exception e) {
-                        Log.e("ProductsDetails", "Invalid JSON in reviews: " + e.getMessage());
+                    JSONArray reviewsArray = new JSONArray(reviewsJson);
+                    for (int i = 0; i < reviewsArray.length(); i++) {
+                        JSONObject review = reviewsArray.getJSONObject(i);
+                        HashMap<String, String> reviewMap = new HashMap<>();
+                        reviewMap.put("reviewerName", review.optString("reviewerName"));
+                        reviewMap.put("reviewerEmail", review.optString("reviewerEmail"));
+                        reviewMap.put("comment", review.optString("comment"));
+                        reviewMap.put("rating", String.valueOf(review.optDouble("rating")));
+                        reviewMap.put("date", review.optString("date"));
+                        arrayList.add(reviewMap);
                     }
-                } else {
-                    Log.w("ProductsDetails", "No reviews found for this product.");
+                    reviewsAdapter.notifyDataSetChanged();
                 }
-
             } catch (Exception e) {
                 Log.e("ProductsDetails", "Error setting product data: " + e.getMessage());
                 e.printStackTrace();
-                Toast.makeText(this, "Error loading product details", Toast.LENGTH_SHORT).show();
             }
         }
 
-        try {
-            addToCart.setOnClickListener(v -> {
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View productView = layoutInflater.inflate(R.layout.add_to_cart_product, linearLayout, false);
 
-                linearLayout.removeAllViews();
-                linearLayout.addView(productView);
-
-                if (linearLayout.getVisibility() != View.VISIBLE) {
-                    linearLayout.setVisibility(View.VISIBLE);
-                    linearLayout.startAnimation(AnimationUtils.loadAnimation(ProductsDetails.this, R.anim.bottom_from_up));
-                }
-
-                RoundedImageView productImage = productView.findViewById(R.id.productImage);
-                TextView qty = productView.findViewById(R.id.qty);
-                RoundedImageView qtyMinus = productView.findViewById(R.id.qtyMinus);
-                RoundedImageView qtyPlus = productView.findViewById(R.id.qtyPlus);
-                Button btnSubmit = productView.findViewById(R.id.btnSubmit);
-
-                qtyPlus.setOnClickListener(plusView -> {
-                    int currentQty = Integer.parseInt(qty.getText().toString());
-                    currentQty++;
-                    qty.setText(String.valueOf(currentQty));
-                });
-            });
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        viewCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ProductsDetails.this, "Opening Cart", Toast.LENGTH_SHORT).show();
-                if (mainCard.getVisibility() == View.VISIBLE) {
-                    mainCard.startAnimation(AnimationUtils.loadAnimation(ProductsDetails.this, R.anim.bottom_from_up));
-                    mainCard.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
-    //============================ Recycler View Starts here ======================================
-
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.UserReview> {
 
         @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = getLayoutInflater();
-            View myView = layoutInflater.inflate(R.layout.customers_reviews, parent, false);
-            return new MyViewHolder(myView);
+        public UserReview onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customers_reviews, parent, false);
+            return new UserReview(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            HashMap<String, String> review = arrayList.get(position);
-            holder.customerName.setText(review.get("reviewerName"));
-            holder.customerEmail.setText(review.get("reviewerEmail"));
-            holder.customerReview.setText(review.get("comment"));
-            holder.customerRating.setText("Rating: " + review.get("rating"));
-            holder.reviewDate.setText(review.get("date"));
+        public void onBindViewHolder(@NonNull UserReview holder, int position) {
+            HashMap<String, String> hashMap = arrayList.get(position);
+
+            holder.tvReviewerName.setText(hashMap.get("reviewerName"));
+            holder.tvReviewerEmail.setText(hashMap.get("reviewerEmail"));
+            holder.tvComment.setText(hashMap.get("comment"));
+            holder.tvRating.setText(hashMap.get("rating"));
+            holder.tvDate.setText(hashMap.get("date"));
         }
 
         @Override
@@ -220,20 +219,17 @@ public class ProductsDetails extends AppCompatActivity {
             return arrayList.size();
         }
 
-        private class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView customerName, customerEmail, customerReview, customerRating, reviewDate;
+        class UserReview extends RecyclerView.ViewHolder {
+            TextView tvReviewerName, tvReviewerEmail, tvComment, tvRating, tvDate;
 
-            public MyViewHolder(@NonNull View itemView) {
+            public UserReview(@NonNull View itemView) {
                 super(itemView);
-                customerName = itemView.findViewById(R.id.reviewerName);
-                customerEmail = itemView.findViewById(R.id.reviewerEmail);
-                customerReview = itemView.findViewById(R.id.comment);
-                customerRating = itemView.findViewById(R.id.rating);
-                reviewDate = itemView.findViewById(R.id.date);
+                tvReviewerName = itemView.findViewById(R.id.reviewerName);
+                tvReviewerEmail = itemView.findViewById(R.id.reviewerEmail);
+                tvComment = itemView.findViewById(R.id.comment);
+                tvRating = itemView.findViewById(R.id.rating);
+                tvDate = itemView.findViewById(R.id.date);
             }
         }
     }
-
-    //============================ Recycler View Ends here ======================================
-
 }
