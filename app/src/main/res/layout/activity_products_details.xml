@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -57,11 +58,11 @@
 
 
         <ScrollView
-            android:elevation="@dimen/_5sdp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_7sdp"
             android:layout_marginBottom="@dimen/_10sdp"
+            android:elevation="@dimen/_5sdp"
             android:paddingStart="@dimen/_10sdp"
             android:paddingEnd="@dimen/_10sdp"
             app:layout_constraintBottom_toTopOf="@id/orderNow"
@@ -172,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="dimensions"
+                    android:text="Dimensions: "
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintTop_toBottomOf="@id/weight" />
@@ -231,14 +232,31 @@
                     app:layout_constraintTop_toBottomOf="@id/warrantyInformation" />
 
                 <TextView
-                    android:id="@+id/availabilityStatus"
-                    android:layout_width="match_parent"
+                    android:id="@+id/availabilityStatusTV"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="availabilityStatus"
+                    android:text="Availability Status: "
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/shippingInformation" />
+
+                <TextView
+                    android:id="@+id/availabilityStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:paddingStart="@dimen/_7sdp"
+                    android:paddingTop="@dimen/_2sdp"
+                    android:paddingEnd="@dimen/_7sdp"
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:text="hhhhhhhh"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/availabilityStatusTV"
+                    app:layout_constraintStart_toEndOf="@id/availabilityStatusTV"
+                    app:layout_constraintTop_toTopOf="@id/availabilityStatusTV" />
 
                 <TextView
                     android:id="@+id/productCategory"
@@ -255,11 +273,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="productTags"
+                    android:text="Related Tags"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/productCategory" />
 
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/tagsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_6sdp"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_4sdp"
+                    app:flexWrap="wrap"
+                    app:justifyContent="flex_start"
+                    app:layout_constraintTop_toBottomOf="@id/productTags"
+                    tools:ignore="MissingConstraints" />
 
 
                 <TextView
@@ -271,7 +302,7 @@
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/productTags" />
+                    app:layout_constraintTop_toBottomOf="@id/tagsContainer" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewsRecyclerView"

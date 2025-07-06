@@ -136,6 +136,21 @@ public class MainActivity extends AppCompatActivity {
                     hashMap.put("stock", String.valueOf(jsonObject.optInt("stock")));
                     hashMap.put("brand", jsonObject.optString("brand", "N/A"));
                     hashMap.put("sku", jsonObject.optString("sku", "N/A"));
+                    hashMap.put("shippingInformation", jsonObject.optString("shippingInformation", "N/A"));
+                    hashMap.put("warrantyInformation", jsonObject.optString("warrantyInformation", "N/A"));
+                    hashMap.put("availabilityStatus", jsonObject.optString("availabilityStatus", "N/A"));
+                    hashMap.put("minimumOrderQuantity", jsonObject.optString("minimumOrderQuantity", "N/A"));
+
+                    JSONObject dimensions = jsonObject.optJSONObject("dimensions");
+                    if (dimensions != null) {
+                        hashMap.put("depth", dimensions.optString("depth"));
+                        hashMap.put("width", dimensions.optString("width"));
+                        hashMap.put("height", dimensions.optString("height"));
+                    }
+
+
+
+
                     hashMap.put("weight", String.valueOf(jsonObject.optDouble("weight")));
                     hashMap.put("thumbnail", jsonObject.optString("thumbnail", ""));
 

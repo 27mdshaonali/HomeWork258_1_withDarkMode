@@ -21,6 +21,7 @@ import com.denzcoskun.imageslider.constants.AnimationTypes;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +37,9 @@ public class ProductsDetails extends AppCompatActivity {
 
     RecyclerView reviewsRecyclerView;
     ArrayList<HashMap<String, String>> arrayList;
+    FlexboxLayout tagsContainer;
+
+    TextView shippingInformationTextView, warrantyInformationTextView, availabilityTextView, skuTextView, dimensions, widthTextView, heightTextView, depthTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,17 @@ public class ProductsDetails extends AppCompatActivity {
         TextView productBrand = findViewById(R.id.productBrand);
         TextView productCategory = findViewById(R.id.productCategory);
         TextView weight = findViewById(R.id.weight);
-        TextView tagsTextView = findViewById(R.id.productTags);
+        //TextView tagsTextView = findViewById(R.id.productTags);
+        tagsContainer = findViewById(R.id.tagsContainer);
+
+        shippingInformationTextView = findViewById(R.id.shippingInformation);
+        warrantyInformationTextView = findViewById(R.id.warrantyInformation);
+        availabilityTextView = findViewById(R.id.availabilityStatus);
+        //skuTextView = findViewById(R.id.sku);
+        dimensions = findViewById(R.id.dimensions);
+        widthTextView = findViewById(R.id.width);
+        heightTextView = findViewById(R.id.height);
+        depthTextView = findViewById(R.id.depth);
 
         LinearLayout linearLayout = findViewById(R.id.linearLayout);
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
@@ -77,6 +91,17 @@ public class ProductsDetails extends AppCompatActivity {
                 String category = product.get("category");
                 String[] images = product.get("images").split(",");
 
+                String sku = product.get("sku");
+                String shippingInformation = product.get("shippingInformation");
+                String warrantyInformation = product.get("warrantyInformation");
+                String availabilityStatus = product.get("availabilityStatus");
+                String minimumOrderQuantity = product.get("minimumOrderQuantity");
+
+                //=========================== Dimensions =============================
+                double width = Double.parseDouble(product.get("width"));
+                double height = Double.parseDouble(product.get("height"));
+                double depth = Double.parseDouble(product.get("depth"));
+
                 productTitle.setText(title);
                 productDescription.setText(description);
 
@@ -93,6 +118,44 @@ public class ProductsDetails extends AppCompatActivity {
                 productBrand.setText("Brand : " + brand);
                 productCategory.setText("Category :  " + category);
                 weight.setText("Weight :  " + product.get("weight"));
+
+                if (width != 0 && height != 0 && depth != 0) {
+
+                    widthTextView.setText("Width: " + width);
+                    heightTextView.setText("Height: " + height);
+                    depthTextView.setText("Depth: " + depth);
+
+                } else {
+                    dimensions.setVisibility(View.GONE);
+                }
+
+                shippingInformationTextView.setText("Shipping Information: " + shippingInformation);
+                warrantyInformationTextView.setText("Warranty Information: " + warrantyInformation);
+
+                //minimumOrderQuantityTextView.setText("Minimum Order Quantity: " + minimumOrderQuantity);
+                //skuTextView.setText("SKU: " + sku);
+                availabilityTextView.setText(availabilityStatus);
+
+                if (availabilityStatus != null && availabilityStatus.contains("In Stock")) {
+                    availabilityTextView.setBackgroundResource(R.drawable.bg_available);
+                    availabilityTextView.setTextColor(getResources().getColor(android.R.color.white));
+                } else {
+                    availabilityTextView.setBackgroundResource(R.drawable.bg_unavailable);
+                    availabilityTextView.setTextColor(getResources().getColor(android.R.color.white));
+                }
+
+
+                /*
+                if (availabilityStatus != null && availabilityStatus.toLowerCase().contains("in stock")) {
+                    availabilityTextView.setBackgroundResource(R.drawable.bg_available);
+                    availabilityTextView.setTextColor(getResources().getColor(android.R.color.white));
+                } else {
+                    availabilityTextView.setBackgroundResource(R.drawable.bg_unavailable);
+                    availabilityTextView.setTextColor(getResources().getColor(android.R.color.white));
+                }
+
+                 */
+
 
                 // Image Slider
                 List<SlideModel> slideModels = new ArrayList<>();
@@ -113,6 +176,8 @@ public class ProductsDetails extends AppCompatActivity {
                     }
                 });
 
+                /*
+
                 // Tags
                 String tagsJson = product.get("tags");
                 if (tagsJson != null && !tagsJson.isEmpty()) {
@@ -130,6 +195,42 @@ public class ProductsDetails extends AppCompatActivity {
                     tagsTextView.setText("Tags: " + TextUtils.join(", ", tagList));
                 } else {
                     tagsTextView.setText("Tags: None");
+                }
+
+                 */
+
+                tagsContainer.removeAllViews(); // Clear existing if reused
+
+                String tagsJson = product.get("tags");
+                if (tagsJson != null && !tagsJson.isEmpty()) {
+                    List<String> tagList = new ArrayList<>();
+                    if (tagsJson.trim().startsWith("[")) {
+                        JSONArray tagsArray = new JSONArray(tagsJson);
+                        for (int i = 0; i < tagsArray.length(); i++) {
+                            tagList.add(tagsArray.getString(i));
+                        }
+                    } else {
+                        for (String tag : tagsJson.split(",")) {
+                            tagList.add(tag.trim());
+                        }
+                    }
+
+                    for (String tag : tagList) {
+                        TextView tagView = new TextView(this);
+                        tagView.setText(tag);
+                        tagView.setTextColor(getResources().getColor(R.color.secondary_text));
+                        //tagView.setTextColor(getResources().getColor(android.R.color.black));
+                        tagView.setBackgroundResource(R.drawable.tag_background);
+                        tagView.setPadding(24, 12, 24, 12);
+
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(10, 10, 10, 10);
+                        tagView.setLayoutParams(params);
+
+                        tagsContainer.addView(tagView);
+                    }
                 }
 
                 // Reviews

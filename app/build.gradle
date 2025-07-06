@@ -72,5 +72,6 @@ dependencies {
     implementation 'com.airbnb.android:lottie:6.6.6'
     //noinspection UseTomlInstead
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
 }
