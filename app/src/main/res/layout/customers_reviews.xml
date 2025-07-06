@@ -3,58 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/_2sdp"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp"
+    android:background="@color/card_background"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@android:color/white">
+        android:padding="@dimen/_9sdp"
+        android:background="@color/card_background">
 
         <TextView
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Comment"
+            android:textAlignment="center"
             android:textStyle="bold"
-            android:textSize="14sp"
-            android:paddingBottom="4dp" />
+            android:textSize="@dimen/_14ssp"
+            android:paddingBottom="@dimen/_2sdp" />
 
         <TextView
+            android:layout_marginTop="@dimen/_5sdp"
             android:id="@+id/rating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Rating"
-            android:textSize="13sp"
-            android:paddingBottom="4dp" />
+            android:textSize="@dimen/_11sdp"
+            android:paddingBottom="@dimen/_2sdp" />
 
         <TextView
             android:id="@+id/reviewerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Reviewer Name"
-            android:textSize="12sp"
             android:textStyle="bold"
-            android:paddingBottom="2dp" />
+            android:textSize="@dimen/_12ssp"
+            android:paddingBottom="@dimen/_2sdp" />
 
         <TextView
             android:id="@+id/reviewerEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Reviewer Email"
-            android:textSize="12sp"
-            android:paddingBottom="2dp" />
+            android:textSize="@dimen/_13ssp"
+            android:paddingBottom="@dimen/_2sdp" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date"
-            android:textSize="11sp"
+            android:textSize="@dimen/_10ssp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:textStyle="italic" />
 
     </LinearLayout>

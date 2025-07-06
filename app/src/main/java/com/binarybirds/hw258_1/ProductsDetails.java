@@ -25,9 +25,12 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ProductsDetails extends AppCompatActivity {
 
@@ -52,7 +55,6 @@ public class ProductsDetails extends AppCompatActivity {
         TextView productCategory = findViewById(R.id.productCategory);
         TextView weight = findViewById(R.id.weight);
         TextView tagsTextView = findViewById(R.id.productTags);
-
 
         LinearLayout linearLayout = findViewById(R.id.linearLayout);
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
@@ -81,117 +83,90 @@ public class ProductsDetails extends AppCompatActivity {
                 double mainPriceDouble = Double.parseDouble(price);
                 double disDouble = Double.parseDouble(discount);
                 String disPercentage = String.format("%.2f", disDouble);
-                String discountedPriceDouble = String.format("%.2f", mainPriceDouble - (mainPriceDouble * disDouble / 100));
-                productOfferPrice.setText("Offer Price :  $" + discountedPriceDouble + " (After " + disPercentage + "% Off)");
+                String discountedPrice = String.format("%.2f", mainPriceDouble - (mainPriceDouble * disDouble / 100));
+                productOfferPrice.setText("Offer Price :  $" + discountedPrice + " (After " + disPercentage + "% Off)");
                 productMainPrice.setText("Price :  $" + price);
                 productMainPrice.setPaintFlags(productMainPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
 
                 productRating.setText("Rating :  " + rating + " / 5");
-                int stockInt = Integer.parseInt(stock);
-                productStock.setText("Stock :  " + stockInt);
-
+                productStock.setText("Stock :  " + stock);
                 productBrand.setText("Brand : " + brand);
                 productCategory.setText("Category :  " + category);
-
                 weight.setText("Weight :  " + product.get("weight"));
 
-
-
-
-                /*
-                if (stockInt == 0) {
-                    linearLayout.setVisibility(View.GONE);
-                    mainContainer.setVisibility(View.GONE);
+                // Image Slider
+                List<SlideModel> slideModels = new ArrayList<>();
+                for (String imageUrl : images) {
+                    slideModels.add(new SlideModel(imageUrl.trim(), ScaleTypes.FIT));
                 }
+                imageSlider.setImageList(slideModels);
+                imageSlider.setSlideAnimation(AnimationTypes.TOSS);
+                imageSlider.startSliding(2000);
+                imageSlider.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void doubleClick(int i) {
+                    }
 
-                 */
+                    @Override
+                    public void onItemSelected(int position) {
+                        Toast.makeText(ProductsDetails.this, "Clicked image " + (position + 1), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
+                // Tags
                 String tagsJson = product.get("tags");
                 if (tagsJson != null && !tagsJson.isEmpty()) {
-                    try {
-                        List<String> tagList = new ArrayList<>();
-
-                        // Case 1: Valid JSON Array (e.g., ["beauty", "mascara"])
-                        if (tagsJson.trim().startsWith("[")) {
-                            JSONArray tagsArray = new JSONArray(tagsJson);
-                            for (int i = 0; i < tagsArray.length(); i++) {
-                                tagList.add(tagsArray.getString(i));
-                            }
-                        } else {
-                            // Case 2: Comma-separated plain text (e.g., beauty,mascara)
-                            String[] parts = tagsJson.split(",");
-                            for (String part : parts) {
-                                tagList.add(part.trim());
-                            }
+                    List<String> tagList = new ArrayList<>();
+                    if (tagsJson.trim().startsWith("[")) {
+                        JSONArray tagsArray = new JSONArray(tagsJson);
+                        for (int i = 0; i < tagsArray.length(); i++) {
+                            tagList.add(tagsArray.getString(i));
                         }
-
-                        if (!tagList.isEmpty()) {
-                            String tagsText = TextUtils.join(", ", tagList);
-                            tagsTextView.setText("Tags: " + tagsText);
-                        } else {
-                            tagsTextView.setText("Tags: None");
+                    } else {
+                        for (String tag : tagsJson.split(",")) {
+                            tagList.add(tag.trim());
                         }
-
-                    } catch (Exception e) {
-                        tagsTextView.setText("Tags: Invalid format");
-                        Log.e("TAGS_PARSE", "Error parsing tags: " + e.getMessage());
                     }
+                    tagsTextView.setText("Tags: " + TextUtils.join(", ", tagList));
                 } else {
                     tagsTextView.setText("Tags: None");
                 }
 
-
-
-                //====================== Image Slider Start ======================
-
-                List<SlideModel> slideModels = new ArrayList<>();
-
-                if (images.length > 0) {
-                    for (String imageUrl : images) {
-                        String trimmedUrl = imageUrl.trim();
-                        slideModels.add(new SlideModel(trimmedUrl, ScaleTypes.FIT));
-                    }
-
-                    imageSlider.setImageList(slideModels);
-                    imageSlider.setSlideAnimation(AnimationTypes.TOSS);
-                    imageSlider.startSliding(2000);
-
-                    imageSlider.setItemClickListener(new ItemClickListener() {
-                        @Override
-                        public void doubleClick(int i) {
-                        }
-
-                        @Override
-                        public void onItemSelected(int position) {
-                            Toast.makeText(ProductsDetails.this, "Clicked image " + (position + 1), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                //====================== Image Slider End ======================
-
-
+                // Reviews
                 String reviewsJson = product.get("reviews");
                 if (reviewsJson != null && !reviewsJson.isEmpty()) {
                     JSONArray reviewsArray = new JSONArray(reviewsJson);
                     for (int i = 0; i < reviewsArray.length(); i++) {
-                        JSONObject review = reviewsArray.getJSONObject(i);
-                        HashMap<String, String> reviewMap = new HashMap<>();
-                        reviewMap.put("reviewerName", review.optString("reviewerName"));
-                        reviewMap.put("reviewerEmail", review.optString("reviewerEmail"));
-                        reviewMap.put("comment", review.optString("comment"));
-                        reviewMap.put("rating", String.valueOf(review.optDouble("rating")));
-                        reviewMap.put("date", review.optString("date"));
-                        arrayList.add(reviewMap);
+                        JSONObject reviewObject = reviewsArray.getJSONObject(i);
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("reviewerName", reviewObject.optString("reviewerName"));
+                        hashMap.put("reviewerEmail", reviewObject.optString("reviewerEmail"));
+                        hashMap.put("comment", reviewObject.optString("comment"));
+                        hashMap.put("rating", reviewObject.optString("rating"));
+                        hashMap.put("date", reviewObject.optString("date"));
+                        arrayList.add(hashMap);
                     }
                     reviewsAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                Log.e("ProductsDetails", "Error setting product data: " + e.getMessage());
+                Log.e("ProductsDetails", "Error: " + e.getMessage());
                 e.printStackTrace();
             }
         }
+    }
 
+    private String formatDate(String isoDate) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Make sure it's UTC if needed
+            Date date = inputFormat.parse(isoDate);
 
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+            outputFormat.setTimeZone(TimeZone.getDefault()); // Local timezone
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            return isoDate; // Fallback to raw if parsing fails
+        }
     }
 
     private class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.UserReview> {
@@ -207,11 +182,20 @@ public class ProductsDetails extends AppCompatActivity {
         public void onBindViewHolder(@NonNull UserReview holder, int position) {
             HashMap<String, String> hashMap = arrayList.get(position);
 
-            holder.tvReviewerName.setText(hashMap.get("reviewerName"));
-            holder.tvReviewerEmail.setText(hashMap.get("reviewerEmail"));
-            holder.tvComment.setText(hashMap.get("comment"));
-            holder.tvRating.setText(hashMap.get("rating"));
-            holder.tvDate.setText(hashMap.get("date"));
+            String reviewerName = hashMap.get("reviewerName");
+            String reviewerEmail = hashMap.get("reviewerEmail");
+            String comment = hashMap.get("comment");
+            String rating = hashMap.get("rating");
+            String rawDate = hashMap.get("date");
+            String formattedDate = formatDate(rawDate);
+
+            holder.tvReviewerName.setText("Name: " + reviewerName);
+            holder.tvReviewerEmail.setText("Email: " + reviewerEmail);
+            holder.tvComment.setText(comment);
+            holder.tvRating.setText("Rating: " + rating + " /5");
+            holder.tvDate.setText("Date: " + formattedDate);
+
+
         }
 
         @Override
@@ -232,4 +216,6 @@ public class ProductsDetails extends AppCompatActivity {
             }
         }
     }
+
+
 }
