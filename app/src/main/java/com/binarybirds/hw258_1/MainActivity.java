@@ -34,9 +34,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -45,9 +42,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -140,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
                     hashMap.put("warrantyInformation", jsonObject.optString("warrantyInformation", "N/A"));
                     hashMap.put("availabilityStatus", jsonObject.optString("availabilityStatus", "N/A"));
                     hashMap.put("minimumOrderQuantity", jsonObject.optString("minimumOrderQuantity", "N/A"));
+                    hashMap.put("returnPolicy", jsonObject.optString("returnPolicy", "N/A"));
+
 
                     JSONObject dimensions = jsonObject.optJSONObject("dimensions");
                     if (dimensions != null) {
@@ -148,7 +144,13 @@ public class MainActivity extends AppCompatActivity {
                         hashMap.put("height", dimensions.optString("height"));
                     }
 
-
+                    JSONObject meta = jsonObject.optJSONObject("meta");
+                    if (meta != null) {
+                        hashMap.put("createdAt", meta.optString("createdAt"));
+                        hashMap.put("updatedAt", meta.optString("updatedAt"));
+                        hashMap.put("barcode", meta.optString("barcode"));
+                        hashMap.put("qrCode", meta.optString("qrCode"));
+                    }
 
 
                     hashMap.put("weight", String.valueOf(jsonObject.optDouble("weight")));

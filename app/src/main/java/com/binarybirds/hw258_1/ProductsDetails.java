@@ -1,11 +1,11 @@
 package com.binarybirds.hw258_1;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +22,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.flexbox.FlexboxLayout;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +40,8 @@ public class ProductsDetails extends AppCompatActivity {
     ArrayList<HashMap<String, String>> arrayList;
     FlexboxLayout tagsContainer;
 
-    TextView shippingInformationTextView, warrantyInformationTextView, availabilityTextView, skuTextView, dimensions, widthTextView, heightTextView, depthTextView;
+    TextView shippingInformationTextView, warrantyInformationTextView, availabilityTextView, skuTextView, minimumOrder, returnPolicy, dimensions, widthTextView, heightTextView, depthTextView, metaCreatedDate, metaUpdatedDate, metaBarcode;
+    ImageView metaQrCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +63,17 @@ public class ProductsDetails extends AppCompatActivity {
         //TextView tagsTextView = findViewById(R.id.productTags);
         tagsContainer = findViewById(R.id.tagsContainer);
 
+        minimumOrder = findViewById(R.id.minimumOrder);
+        returnPolicy = findViewById(R.id.returnPolicy);
+        metaCreatedDate = findViewById(R.id.metaCreatedDate);
+        metaUpdatedDate = findViewById(R.id.metaUpdatedDate);
+        metaBarcode = findViewById(R.id.barCode);
+        metaQrCode = findViewById(R.id.qrCode);
+
         shippingInformationTextView = findViewById(R.id.shippingInformation);
         warrantyInformationTextView = findViewById(R.id.warrantyInformation);
         availabilityTextView = findViewById(R.id.availabilityStatus);
-        //skuTextView = findViewById(R.id.sku);
+        skuTextView = findViewById(R.id.sku);
         dimensions = findViewById(R.id.dimensions);
         widthTextView = findViewById(R.id.width);
         heightTextView = findViewById(R.id.height);
@@ -96,11 +105,21 @@ public class ProductsDetails extends AppCompatActivity {
                 String warrantyInformation = product.get("warrantyInformation");
                 String availabilityStatus = product.get("availabilityStatus");
                 String minimumOrderQuantity = product.get("minimumOrderQuantity");
+                String returnPolicyValue = product.get("returnPolicy");
+
 
                 //=========================== Dimensions =============================
                 double width = Double.parseDouble(product.get("width"));
                 double height = Double.parseDouble(product.get("height"));
                 double depth = Double.parseDouble(product.get("depth"));
+
+                //=========================== meta =============================
+
+                String createdAt = product.get("createdAt");
+                String updatedAt = product.get("updatedAt");
+                String barcode = product.get("barcode");
+                String qrCode = product.get("qrCode");
+
 
                 productTitle.setText(title);
                 productDescription.setText(description);
@@ -131,9 +150,16 @@ public class ProductsDetails extends AppCompatActivity {
 
                 shippingInformationTextView.setText("Shipping Information: " + shippingInformation);
                 warrantyInformationTextView.setText("Warranty Information: " + warrantyInformation);
+                returnPolicy.setText("Return Policy: " + returnPolicyValue);
 
-                //minimumOrderQuantityTextView.setText("Minimum Order Quantity: " + minimumOrderQuantity);
-                //skuTextView.setText("SKU: " + sku);
+                metaCreatedDate.setText("Created At: " + formatDate(createdAt));
+                metaUpdatedDate.setText("Updated At: " + formatDate(updatedAt));
+                metaBarcode.setText(barcode);
+
+                Picasso.get().load(qrCode).placeholder(R.drawable.shaon).into(metaQrCode);
+
+                skuTextView.setText("SKU: " + sku);
+                minimumOrder.setText("Minimum Order Quantity: " + minimumOrderQuantity);
                 availabilityTextView.setText(availabilityStatus);
 
                 if (availabilityStatus != null && availabilityStatus.contains("In Stock")) {
@@ -223,9 +249,7 @@ public class ProductsDetails extends AppCompatActivity {
                         tagView.setBackgroundResource(R.drawable.tag_background);
                         tagView.setPadding(24, 12, 24, 12);
 
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(10, 10, 10, 10);
                         tagView.setLayoutParams(params);
 
