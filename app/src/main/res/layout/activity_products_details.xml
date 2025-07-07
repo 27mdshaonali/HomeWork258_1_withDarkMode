@@ -74,9 +74,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_80sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@color/background"
-                android:paddingBottom="@dimen/_80sdp">
+                android:paddingBottom="@dimen/_10sdp">
 
 
                 <!--        <com.denzcoskun.imageslider.ImageSlider-->
@@ -191,6 +191,7 @@
                     android:textSize="@dimen/_9ssp"
                     app:layout_constraintEnd_toEndOf="@id/qrCode"
                     app:layout_constraintStart_toStartOf="@id/qrCode"
+                    android:padding="@dimen/_1sdp"
                     app:layout_constraintTop_toBottomOf="@id/qrCode" />
 
                 <TextView
@@ -389,17 +390,7 @@
                     app:layout_constraintTop_toBottomOf="@id/reviews" />
 
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_27sdp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/addToCart"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/productCategory"
-                    app:layout_constraintVertical_bias="1.0" />
+
 
 
                 <Button
@@ -545,6 +536,18 @@
 
         </ScrollView>
 
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:elevation="@dimen/_10sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/orderNow"
+            app:layout_constraintVertical_bias="1.0" />
+
 
         <Button
             android:id="@+id/orderNow"
@@ -552,7 +555,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:ems="10"
+            android:elevation="@dimen/_5sdp"
             android:text="Order Now"
             android:textColor="@color/cart_text_color"
             android:textSize="@dimen/_15ssp"

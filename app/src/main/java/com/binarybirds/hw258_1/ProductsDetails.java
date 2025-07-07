@@ -1,10 +1,12 @@
 package com.binarybirds.hw258_1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,7 +41,7 @@ public class ProductsDetails extends AppCompatActivity {
     RecyclerView reviewsRecyclerView;
     ArrayList<HashMap<String, String>> arrayList;
     FlexboxLayout tagsContainer;
-
+    Button orderNow;
     TextView shippingInformationTextView, warrantyInformationTextView, availabilityTextView, skuTextView, minimumOrder, returnPolicy, dimensions, widthTextView, heightTextView, depthTextView, metaCreatedDate, metaUpdatedDate, metaBarcode;
     ImageView metaQrCode;
 
@@ -81,6 +83,7 @@ public class ProductsDetails extends AppCompatActivity {
 
         LinearLayout linearLayout = findViewById(R.id.linearLayout);
         ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
+        orderNow = findViewById(R.id.orderNow);
 
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView);
         arrayList = new ArrayList<>();
@@ -257,6 +260,102 @@ public class ProductsDetails extends AppCompatActivity {
                     }
                 }
 
+                orderNow.setOnClickListener(v -> {
+
+                    linearLayout.setVisibility(View.VISIBLE);
+                    linearLayout.removeAllViews();
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.add_to_cart_product, null);
+                    linearLayout.addView(view);
+
+                    orderNow.setEnabled(false);
+
+                    ImageView qtyMinus = view.findViewById(R.id.qtyMinus);
+                    ImageView qtyPlus = view.findViewById(R.id.qtyPlus);
+                    ImageView productImage = view.findViewById(R.id.productImage);
+                    Button confirmOrder = view.findViewById(R.id.confirmOrder);
+                    TextView totalPrice = view.findViewById(R.id.totalPrice);
+                    TextView totalDiscount = view.findViewById(R.id.totalDiscount);
+                    TextView qty = view.findViewById(R.id.qty);
+
+                    int minQty = Integer.parseInt(minimumOrderQuantity);
+                    int maxQty = Integer.parseInt(stock);
+                    final int[] currentQty = {minQty};
+
+                    qty.setText(String.valueOf(currentQty[0]));
+
+                    Picasso.get().load(images[0]).placeholder(R.drawable.shaon).into(productImage);
+
+                    // Calculate prices initially
+                    updatePrice(currentQty[0], price, discount, totalPrice, totalDiscount);
+
+                    // Disable buttons if needed
+                    qtyMinus.setEnabled(currentQty[0] > minQty);
+                    qtyPlus.setEnabled(currentQty[0] < maxQty);
+
+                    qtyMinus.setOnClickListener(view1 -> {
+                        if (currentQty[0] > minQty) {
+                            currentQty[0]--;
+                            qty.setText(String.valueOf(currentQty[0]));
+                            updatePrice(currentQty[0], price, discount, totalPrice, totalDiscount);
+                        }
+
+                        qtyMinus.setEnabled(currentQty[0] > minQty);
+                        qtyPlus.setEnabled(currentQty[0] < maxQty);
+                    });
+
+                    qtyPlus.setOnClickListener(view12 -> {
+                        if (currentQty[0] < maxQty) {
+                            currentQty[0]++;
+                            qty.setText(String.valueOf(currentQty[0]));
+                            updatePrice(currentQty[0], price, discount, totalPrice, totalDiscount);
+                        }
+
+                        qtyMinus.setEnabled(currentQty[0] > minQty);
+                        qtyPlus.setEnabled(currentQty[0] < maxQty);
+                    });
+
+
+                    confirmOrder.setOnClickListener(view13 -> {
+                        linearLayout.removeAllViews();
+                        orderNow.setEnabled(true);
+
+                        // Get values
+                        int finalQty = currentQty[0];
+                        double mainPrice = Double.parseDouble(price);
+                        double discountPercent = Double.parseDouble(discount);
+                        double discountedUnitPrice = mainPrice - (mainPrice * discountPercent / 100);
+                        double totalPriceAfterDiscount = finalQty * discountedUnitPrice;
+                        double totalDiscountAmount = finalQty * (mainPrice - discountedUnitPrice);
+
+                        // Build message
+                        String message = "Order Summary:\n" +
+                                "Product: " + title + "\n" +
+                                "Quantity: " + finalQty + "\n" +
+                                "Total Price (after " + discount + "% discount): $" + String.format("%.2f", totalPriceAfterDiscount) + "\n\n" +
+                                "You saved: $" + String.format("%.2f", totalDiscountAmount) + "\n\n" +
+                                "Thank you for your purchase!\nMd ShAoN Ali";
+
+                        // Share intent (SMS, Email, WhatsApp, etc.)
+                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                        sendIntent.setType("text/plain");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+                        // Optional: preset email subject if sent via email
+                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Order Confirmation");
+
+                        // Start chooser
+                        startActivity(Intent.createChooser(sendIntent, "Share order via"));
+
+                        Toast.makeText(ProductsDetails.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
+                    });
+
+
+
+                });
+
+
                 // Reviews
                 String reviewsJson = product.get("reviews");
                 if (reviewsJson != null && !reviewsJson.isEmpty()) {
@@ -291,6 +390,26 @@ public class ProductsDetails extends AppCompatActivity {
             return outputFormat.format(date);
         } catch (Exception e) {
             return isoDate; // Fallback to raw if parsing fails
+        }
+    }
+
+    private void updatePrice(int quantity, String priceStr, String discountStr, TextView totalPriceView, TextView totalDiscountView) {
+        try {
+            double mainPrice = Double.parseDouble(priceStr);
+            double discountPercent = Double.parseDouble(discountStr);
+
+            double discountedUnitPrice = mainPrice - (mainPrice * discountPercent / 100);
+            double totalPrice = quantity * discountedUnitPrice;
+            double totalDiscount = quantity * (mainPrice - discountedUnitPrice);
+
+            totalPriceView.setText("Total Price: $" + String.format("%.2f", totalPrice));
+            totalDiscountView.setText("Total Discount: $" + String.format("%.2f", totalDiscount));
+
+
+
+
+        } catch (Exception e) {
+            Log.e("updatePrice", "Error parsing price or discount: " + e.getMessage());
         }
     }
 

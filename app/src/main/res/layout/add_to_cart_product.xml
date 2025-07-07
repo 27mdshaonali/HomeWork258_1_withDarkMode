@@ -31,78 +31,67 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/productImage"
-                android:layout_width="@dimen/_55sdp"
-                android:layout_height="@dimen/_60sdp"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
                 android:paddingStart="@dimen/_7sdp"
                 android:paddingTop="@dimen/_7sdp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="@dimen/_7sdp"
                 android:scaleType="fitXY"
                 android:src="@drawable/shaon"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_corner_radius="@dimen/_6sdp" />
 
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:text="Qty:"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/_16ssp"
-                android:textStyle="italic"
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/qtyMinus"
+                android:layout_width="@dimen/_27sdp"
+                android:layout_height="@dimen/_27sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/_5sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/minus"
                 app:layout_constraintBottom_toBottomOf="@id/productImage"
                 app:layout_constraintStart_toEndOf="@id/productImage"
-                app:layout_constraintTop_toTopOf="@id/productImage" />
+                app:layout_constraintTop_toTopOf="@id/productImage"
+                app:riv_corner_radius="@dimen/_6sdp" />
 
             <TextView
                 android:id="@+id/qty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_3sdp"
+                android:layout_marginEnd="@dimen/_3sdp"
                 android:padding="@dimen/_5sdp"
                 android:text="1"
                 android:textColor="@color/primary_text"
                 android:textSize="@dimen/_17ssp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/productImage"
-                app:layout_constraintStart_toEndOf="@id/text"
+                app:layout_constraintStart_toEndOf="@id/qtyMinus"
                 app:layout_constraintTop_toTopOf="@id/productImage" />
 
             <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/qtyMinus"
-                android:layout_width="@dimen/_23sdp"
-                android:layout_height="@dimen/_23sdp"
+                android:id="@+id/qtyPlus"
+                android:layout_width="@dimen/_27sdp"
+                android:layout_height="@dimen/_27sdp"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:clickable="true"
                 android:focusable="true"
+                android:padding="@dimen/_5sdp"
                 android:scaleType="fitXY"
-                android:src="@drawable/minus"
+                android:src="@drawable/plus"
                 app:layout_constraintBottom_toBottomOf="@id/productImage"
                 app:layout_constraintStart_toEndOf="@id/qty"
                 app:layout_constraintTop_toTopOf="@id/productImage"
                 app:riv_corner_radius="@dimen/_6sdp" />
 
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/qtyPlus"
-                android:layout_width="@dimen/_23sdp"
-                android:layout_height="@dimen/_23sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:clickable="true"
-                android:focusable="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/plus"
-                app:layout_constraintBottom_toBottomOf="@id/productImage"
-                app:layout_constraintStart_toEndOf="@id/qtyMinus"
-                app:layout_constraintTop_toTopOf="@id/productImage"
-                app:riv_corner_radius="@dimen/_6sdp" />
-
-
             <Button
-                android:id="@+id/btnSubmit"
+                android:id="@+id/confirmOrder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
@@ -110,13 +99,40 @@
                 android:background="@drawable/search_bg"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="Save"
+                android:text="Confirm Order"
                 android:textColor="@color/cart_text_color"
                 android:textSize="@dimen/_15ssp"
                 app:layout_constraintBottom_toBottomOf="@id/productImage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/qtyPlus"
                 app:layout_constraintTop_toTopOf="@id/productImage" />
+
+
+            <TextView
+                android:id="@+id/totalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="total price"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintStart_toStartOf="@id/productImage"
+                app:layout_constraintTop_toBottomOf="@id/productImage" />
+
+            <TextView
+                android:id="@+id/totalDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingBottom="@dimen/_6sdp"
+                android:text="total price"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintStart_toStartOf="@id/productImage"
+                app:layout_constraintTop_toBottomOf="@id/totalPrice" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
