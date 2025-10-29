@@ -274,6 +274,9 @@ public class MainActivity extends AppCompatActivity {
             discountAmount.setText("$" + hashMap.get("price") + " (-" + hashMap.get("discountPercentage") + "%)");
             discountAmount.setPaintFlags(discountAmount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
+
+            //================================ parse data to products details activity using intent ===================================
+
             myView.setOnClickListener(v -> {
                 Intent intent = new Intent(getApplicationContext(), ProductsDetails.class);
                 intent.putExtra("product", filteredList.get(i));

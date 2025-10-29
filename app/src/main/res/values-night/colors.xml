@@ -2,7 +2,7 @@
 
 <resources>
 
-    <color name="primary">#667aff</color>
+
 <!--    <color name="background">#252c4b</color>-->
 <!--    <color name="card_background">#27325f</color>-->
 <!--    <color name="primary_text">#ffffff</color>">-->
@@ -13,7 +13,7 @@
 <!--    <color name="dashboard_item_3">#72a4ff</color>-->
 <!--    <color name="dashboard_item_4">#8b72ff</color>-->
 
-
+    <color name="primary">#667aff</color>
     <color name="background">#FF121212</color> <!-- Dark Gray -->
     <color name="primary_text">#FFFFFFFF</color> <!-- White -->
     <color name="secondary_text">#BBBBBB</color> <!-- Light Gray -->
