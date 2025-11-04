@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     public static String PRODUCT_URL = "https://dummyjson.com/products";
 
     ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-
     GridView gridView;
     SearchView searchView;
     ImageView cartView;
